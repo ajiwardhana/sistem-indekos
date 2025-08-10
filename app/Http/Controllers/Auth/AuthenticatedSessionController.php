@@ -44,12 +44,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
-
-    // app/Http/Controllers/Auth/AuthenticatedSessionController.php
-public function redirectTo() {
-    if (auth()->user()->role === 'admin') {
-        return route('admin.dashboard');
-    }
-    return route('home');  # Pastikan route 'home' ada
-}
 }

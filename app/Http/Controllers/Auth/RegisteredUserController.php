@@ -17,17 +17,10 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    protected function create(array $data)
-{
-    return User::create([
-        'name' => $data['name'],
-        'email' => $data['email'],
-        'password' => Hash::make($data['password']),
-        'role' => 'pelanggan', // Default role
-    ]);
-}
-
-
+    public function create(): View
+    {
+        return view('auth.register');
+    }
 
     /**
      * Handle an incoming registration request.

@@ -12,32 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penyewaan', function (Blueprint $table) {
-    $table->id();
-    
-    // Tambahkan kolom dulu tanpa foreign key
-    $table->unsignedBigInteger('user_id');
-    $table->unsignedBigInteger('kamar_id');
-    
-    $table->date('tanggal_mulai');
-    $table->date('tanggal_selesai')->nullable();
-    $table->enum('status', ['aktif', 'selesai', 'dibatalkan'])->default('aktif');
-    $table->decimal('total_pembayaran', 10, 2);
-    $table->timestamps();
-    
-    // Tambahkan foreign key secara terpisah
-    $table->foreign('user_id')
-        ->references('id')
-        ->on('users')
-        ->onDelete('cascade');
+        $table->id();
         
-    $table->foreign('kamar_id')
-        ->references('id')
-        ->on('kamar')
-        ->onDelete('cascade');
-    
-    // Tambahkan ini untuk memastikan engine InnoDB
-    $table->engine = 'InnoDB';
-});
+        // Gunakan constraint dengan nama unik
+        $table->foreignId('user_id')
+              ->constrained('users', 'id', 'uniq_penyewaan_user')
+              ->onDelete('cascade');
+              
+        $table->foreignId('kamar_id')
+              ->constrained('kamar', 'id', 'uniq_penyewaan_kamar')
+              ->onDelete('cascade');
+        
+        $table->date('tanggal_mulai');
+        $table->date('tanggal_selesai')->nullable();
+        $table->enum('status', ['aktif', 'selesai', 'batal'])->default('aktif');
+        $table->timestamps();
+    });
 
 Schema::table('penyewaan', function (Blueprint $table) {
     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
