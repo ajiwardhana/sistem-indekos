@@ -12,18 +12,29 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $total_kamar = Kamar::count();
-        $total_pelanggan = User::where('role', 'pelanggan')->count();
-        $total_penyewaan = Penyewaan::count();
-        $total_pendapatan = Pembayaran::where('status', 'lunas')->sum('jumlah');
-        
-        return view('admin.dashboard', compact(
-            'total_kamar',
-            'total_pelanggan',
-            'total_penyewaan',
-            'total_pendapatan'
-        ));
+        $totalKamar = Kamar::count();
+        $totalPenyewaan = Penyewaan::count();
+        $totalPembayaran = Pembayaran::count();
+        $totalPengguna = User::count();
+
+        return view('admin.dashboard', compact('totalKamar', 'totalPenyewaan', 'totalPembayaran', 'totalPengguna'));
     }
 
-
+    public function pembayaran()
+    {
+        $pembayaran = Pembayaran::with('penyewaan')->latest()->get();
+        return view('admin.pembayaran', compact('pembayarans'));
+    }
+    // app/Http/Controllers/AdminController.php
+    public function penyewaan()
+    {
+        $penyewaan = Penyewaan::with('kamar', 'user')->latest()->get();
+        return view('admin.penyewaan', compact('penyewaans'));
+    }
+    public function pengguna()
+    {
+        $pengguna = User::latest()->get();
+        return view('admin.pengguna', compact('penggunas'));
+    }
+    
 }

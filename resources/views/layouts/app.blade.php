@@ -13,6 +13,18 @@
         @include('partials.alerts')
         @yield('content')
     </div>
+
+    <nav>
+    @auth
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+            <a href="{{ route('admin.kamar.index') }}">Kelola Kamar</a>
+        @else
+            <a href="{{ route('kamar.index') }}">Daftar Kamar</a>
+            <a href="{{ route('penyewaan.index') }}">Penyewaan Saya</a>
+        @endif
+    @endauth
+</nav>
     
     @include('partials.footer')
 </body>

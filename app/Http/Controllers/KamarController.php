@@ -9,7 +9,8 @@ class KamarController extends Controller
 {
     public function index()
     {
-        $kamars = Kamar::where('status', 'tersedia')->get();
+
+        $kamar = Kamar::where('status', 'tersedia')->get();
         return view('kamar.index', compact('kamars'));
     }
 }

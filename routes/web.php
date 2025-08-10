@@ -39,9 +39,16 @@ Route::post('/pembayaran/verify/{id}', [PembayaranController::class, 'verify'])
     ->name('pembayaran.verify')
     ->middleware(['auth', 'admin']);
 
+// Grup route admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Route Kamar
+    Route::resource('kamar', \App\Http\Controllers\Admin\KamarController::class);
+    
+    // Route lainnya
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    // Tambahkan route admin lainnya di sini
+    Route::get('/pembayaran', [AdminController::class, 'pembayaran'])->name('pembayaran');
+    Route::get('/penyewaan', [AdminController::class, 'penyewaan'])->name('penyewaan');
+    Route::get('/pengguna', [AdminController::class, 'pengguna'])->name('pengguna');
 });
 
 require __DIR__.'/auth.php';
