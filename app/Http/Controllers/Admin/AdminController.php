@@ -1,64 +1,66 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Kamar;
 use App\Models\Penyewa;
 use App\Models\Pembayaran;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        // Data Statistik
-        $totalKamar = Kamar::count();
-        $kamarTersedia = Kamar::where('status', 'tersedia')->count();
-        $penyewaAktif = Penyewa::where('status', 'aktif')->count();
-        
-        // Pendapatan bulan ini
-        $pendapatanBulanIni = Pembayaran::whereMonth('tanggal', now()->month)
-            ->whereYear('tanggal', now()->year)
-            ->sum('jumlah');
-        
-        // Data untuk chart pendapatan
-        $chartBulan = [];
-        $chartPendapatan = [];
+        $stats = [
+            'total_kamar' => Kamar::count(),
+            'kamar_tersedia' => Kamar::where('status', 'tersedia')->count(),
+            'penyewa_aktif' => Penyewa::where('status', 'aktif')->count(),
+            'pendapatan_bulan_ini' => Pembayaran::whereMonth('tanggal', now()->month)
+                ->whereYear('tanggal', now()->year)
+                ->sum('jumlah')
+        ];
+
+        $pembayaran_terakhir = Pembayaran::with('penyewa')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $penyewa_baru = Penyewa::with('kamar')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Data untuk chart
+        $chart_pendapatan = $this->getChartData();
+
+        return view('admin.dashboard', compact(
+            'stats',
+            'pembayaran_terakhir',
+            'penyewa_baru',
+            'chart_pendapatan'
+        ));
+    }
+
+    private function getChartData()
+    {
+        $data = [];
+        $labels = [];
         
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $chartBulan[] = $date->format('M Y');
+            $labels[] = $date->format('M Y');
             
             $total = Pembayaran::whereMonth('tanggal', $date->month)
                 ->whereYear('tanggal', $date->year)
                 ->sum('jumlah');
             
-            $chartPendapatan[] = $total;
+            $data[] = $total;
         }
-        
-        // Data status kamar
-        $kamarStatus = [
-            Kamar::where('status', 'tersedia')->count(),
-            Kamar::where('status', 'terisi')->count(),
-            Kamar::where('status', 'perbaikan')->count()
+
+        return [
+            'labels' => $labels,
+            'data' => $data
         ];
-        
-        // Penyewa terbaru
-        $penyewaTerbaru = Penyewa::with('kamar')
-            ->latest()
-            ->take(5)
-            ->get();
-        
-        return view('admin.dashboard', compact(
-            'totalKamar',
-            'kamarTersedia',
-            'penyewaAktif',
-            'pendapatanBulanIni',
-            'chartBulan',
-            'chartPendapatan',
-            'kamarStatus',
-            'penyewaTerbaru'
-        ));
     }
 }

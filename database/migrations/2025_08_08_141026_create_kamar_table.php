@@ -6,29 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
-        // Check if the 'kamar' table does not exist before creating it
-    if (!Schema::hasTable('kamar')) {
-        Schema::create('kamar', function (Blueprint $table) {
+        Schema::create('kamars', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_kamar')->unique();
-            $table->decimal('harga', 10, 2);
-            $table->text('fasilitas');
+            $table->string('nomor_kamar', 10)->unique();
+            $table->enum('tipe', ['standar', 'vip', 'vvip']);
+            $table->integer('harga');
             $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])->default('tersedia');
+            $table->text('fasilitas')->nullable();
             $table->timestamps();
         });
     }
-}
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('kamar');
+        Schema::dropIfExists('kamars');
     }
 };

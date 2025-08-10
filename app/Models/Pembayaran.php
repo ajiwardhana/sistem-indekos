@@ -10,10 +10,10 @@ class Pembayaran extends Model
         'penyewaan_id', 'jumlah', 'tanggal_pembayaran', 'metode_pembayaran', 'bukti_pembayaran', 'status'
     ];
 
-    public function penyewaan()
-    {
-        return $this->belongsTo(Penyewaan::class);
-    }
+    public function penyewa()
+{
+    return $this->belongsTo(Penyewa::class);
+}
 
     public function pembayaran()
     {
