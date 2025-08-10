@@ -13,15 +13,13 @@ class HomeController extends Controller
     public function dashboard()
 {
     $penyewaanAktif = auth()->user()->penyewaan()
+        ->with(['kamar:id,nomor_kamar', 'pembayaran' => fn($q) => $q->latest()])
         ->where('status', 'aktif')
-        ->with('kamar')
-        ->first();
+        ->first(['id', 'kamar_id', 'tanggal_mulai', 'status']);
 
     return view('user.dashboard', [
         'penyewaanAktif' => $penyewaanAktif,
-        'riwayatPembayaran' => $penyewaanAktif 
-            ? $penyewaanAktif->pembayaran()->latest()->get()
-            : collect()
+        'riwayatPembayaran' => $penyewaanAktif?->pembayaran ?? collect()
     ]);
 }
 }
