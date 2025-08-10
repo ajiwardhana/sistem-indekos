@@ -12,6 +12,8 @@ class Penyewaan extends Model
         'user_id', 'kamar_id', 'tanggal_mulai', 'tanggal_selesai', 'status', 'total_pembayaran'
     ];
 
+    protected $table = 'penyewaan';
+
     public function user()
     {
         return $this->belongsTo(User::class);

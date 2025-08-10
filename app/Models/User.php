@@ -23,7 +23,7 @@ class User extends Authenticatable
 
     public function penyewaan()
 {
-    return $this->hasMany(Penyewaan::class);
+    return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
 }
 
     public function isAdmin()
