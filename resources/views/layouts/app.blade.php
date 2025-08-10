@@ -1,35 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title') - Sistem Indekos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    @include('partials.navbar') <!-- Pastikan ini ada -->
 
-@extends('layouts.app')
-@section('title', 'Dashboard Penghuni')
-@section('content')
-<div class="bg-white p-6 rounded-lg shadow">
-    <h2 class="text-xl font-bold mb-4">Informasi Penyewaan Anda</h2>
-    @if($penyewaanAktif)
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-            <h3 class="font-semibold">Kamar</h3>
-            <p>{{ $penyewaanAktif->kamar->nomor_kamar
-            }}</p>
-        </div>
-        <div>
-            <h3 class="font-semibold">Tanggal Mulai</h3>
-            <p>{{ $penyewaanAktif->tanggal_mulai->format('d F Y') }}</p>
-        </div>
-        <div>
-            <h3 class="font-semibold">Status Pembayaran</h3>
-            <p class="{{ $penyewaanAktif->status_pembayaran == '    lunas' ? 'text-green-600' : 'text-red-600' }}">
-                {{ ucfirst($penyewaanAktif->status_pembayaran) }}
-            </p>
-        </div>
-    </div>
-    @else
-    <p class="text-gray-600">Anda belum memiliki kamar yang disewa</p>
-    @endif
-        </div>
-@auth
-    @if(auth()->user()->role === 'admin')
-        <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
-    @else
-        <a href="{{ route('dashboard') }}">Dashboard Saya</a>
-    @endif
-@endauth
+    <main class="py-4">
+        @yield('content')
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
