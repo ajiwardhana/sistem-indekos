@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -16,6 +17,18 @@ use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\PenyewaanController;
 use App\Http\Controllers\Auth\RegisteredController;
 
+
+Auth::routes();
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', function () {
+        return view('home');
+    })->name('home');
+    
+    Route::get('/', function () {
+        return redirect()->route('home');
+    });
+});
 
 
 // Grup route untuk Admin
@@ -36,5 +49,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/register', [RegisteredController::class, 'create'])->name('register');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 require __DIR__.'/auth.php';
