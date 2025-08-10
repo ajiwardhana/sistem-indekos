@@ -45,11 +45,11 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 
-    public function redirectTo()
-    {
-    if (Auth::user()->role === 'admin') {
-        return route('admin.dashboard');  // Pastikan route ini sudah ada
+    // app/Http/Controllers/Auth/AuthenticatedSessionController.php
+public function redirectTo() {
+    if (auth()->user()->role === 'admin') {
+        return route('admin.dashboard');
     }
-    return route('dashboard');  // Ganti dengan route home jika belum ada
-    }
+    return route('home');  # Pastikan route 'home' ada
+}
 }

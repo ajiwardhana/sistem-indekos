@@ -30,9 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
 // Grup route untuk User Biasa
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('kamar', \App\Http\Controllers\KamarController::class)->only(['index', 'show']);
     Route::resource('penyewaan', \App\Http\Controllers\PenyewaanController::class);
 });
