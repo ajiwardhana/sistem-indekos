@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Penyewaan;
+use App\Models\Kamar;
+use Illuminate\Http\Request;
+
+class PenyewaanController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // Untuk admin: tampilkan semua penyewaan
+        // Untuk pelanggan: tampilkan hanya penyewaan miliknya
+        $penyewaans = auth()->user()->isAdmin() 
+            ? Penyewaan::with(['user', 'kamar'])->latest()->get()
+            : Penyewaan::where('user_id', auth()->id())->with('kamar')->latest()->get();
+            
+        return view('penyewaan.index', compact('penyewaans'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $kamars = Kamar::where('status', 'tersedia')->get();
+        return view('penyewaan.create', compact('kamars'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'kamar_id' => 'required|exists:kamars,id',
+            'tanggal_mulai' => 'required|date|after_or_equal:today',
+            'durasi' => 'required|integer|min:1', // durasi dalam bulan
+        ]);
+
+        $kamar = Kamar::findOrFail($validated['kamar_id']);
+        
+        $penyewaan = Penyewaan::create([
+            'user_id' => auth()->id(),
+            'kamar_id' => $validated['kamar_id'],
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'tanggal_selesai' => now()->parse($validated['tanggal_mulai'])->addMonths($validated['durasi']),
+            'total_pembayaran' => $kamar->harga * $validated['durasi'],
+            'status' => 'aktif',
+        ]);
+
+        // Update status kamar
+        $kamar->update(['status' => 'terisi']);
+
+        return redirect()->route('penyewaan.show', $penyewaan->id)
+            ->with('success', 'Penyewaan berhasil dibuat');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Penyewaan $penyewaan)
+    {
+        // Authorization: pastikan user yang melihat adalah pemilik atau admin
+        $this->authorize('view', $penyewaan);
+        
+        return view('penyewaan.show', compact('penyewaan'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Penyewaan $penyewaan)
+    {
+        $this->authorize('update', $penyewaan);
+        
+        $kamars = Kamar::where('status', 'tersedia')
+            ->orWhere('id', $penyewaan->kamar_id)
+            ->get();
+            
+        return view('penyewaan.edit', compact('penyewaan', 'kamars'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Penyewaan $penyewaan)
+    {
+        $this->authorize('update', $penyewaan);
+        
+        $validated = $request->validate([
+            'kamar_id' => 'required|exists:kamars,id',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
+            'status' => 'required|in:aktif,selesai,dibatalkan',
+        ]);
+
+        $penyewaan->update($validated);
+
+        return redirect()->route('penyewaan.show', $penyewaan->id)
+            ->with('success', 'Penyewaan berhasil diperbarui');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Penyewaan $penyewaan)
+    {
+        $this->authorize('delete', $penyewaan);
+        
+        // Kembalikan status kamar ke tersedia
+        $penyewaan->kamar->update(['status' => 'tersedia']);
+        
+        $penyewaan->delete();
+
+        return redirect()->route('penyewaan.index')
+            ->with('success', 'Penyewaan berhasil dihapus');
+    }
+}
