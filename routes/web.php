@@ -10,26 +10,39 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Auth::routes();
-
+use App\Http\Middleware\AdminMiddleware;
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Route untuk admin
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::resource('kamar', KamarController::class);
-    Route::resource('penyewa', PenyewaController::class);
-    Route::resource('pembayaran', PembayaranController::class);
-    
+Route::prefix('admin')
+     ->middleware(['auth', 'admin'])
+     ->group(function () {
+         Route::get('/dashboard', function () {
+             return view('admin.dashboard');
+         })->name('admin.dashboard');
+     
+    Route::resource('admin/kamar', KamarController::class);
+    Route::resource('admin/penyewa', PenyewaController::class);
+    Route::resource('admin/pembayaran', PembayaranController::class);
+    Route::get('/admin/pembayaran/{pembayaran}/cetak', [PembayaranController::class, 'cetak'])->name('pembayaran.cetak');
+
+    // Tambahkan route lainnya yang diperlukan untuk admin
 });
 
 // Route untuk pengguna biasa
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('user.dashboard');
+});
+
+Route::get('/check-kernel', function() {
+    $kernel = app(\App\Http\Kernel::class);
+    return [
+        'middleware' => $kernel->getRouteMiddleware(),
+        'loaded' => class_exists(\App\Http\Middleware\AdminMiddleware::class)
+    ];
 });
 
 

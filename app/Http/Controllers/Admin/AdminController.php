@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Penyewaan;
 use App\Models\Kamar;
 use App\Models\Penyewa;
 use App\Models\Pembayaran;
