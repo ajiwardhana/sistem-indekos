@@ -21,10 +21,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function penyewaans()
-    {
-        return $this->hasMany(Penyewaan::class);
-    }
+    public function penyewaan()
+{
+    return $this->hasMany(Penyewaan::class);
+}
 
     public function isAdmin()
     {

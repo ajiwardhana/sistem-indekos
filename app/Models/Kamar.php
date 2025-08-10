@@ -11,7 +11,17 @@ class Kamar extends Model
     ];
 
     public function penyewaan()
+{
+    return $this->hasMany(Penyewaan::class);
+}
+
+    public function scopeTersedia($query)
     {
-        return $this->hasMany(Penyewaan::class);
+        return $query->where('status', 'tersedia');
     }
+    public function scopeTidakTersedia($query)
+    {
+        return $query->where('status', 'tidak tersedia');
+    }
+
 }

@@ -1,8 +1,10 @@
-<<?php
+<?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Kamar;
+use App\Models\Pembayaran;
 
 class Penyewaan extends Model
 {
@@ -20,7 +22,7 @@ class Penyewaan extends Model
         return $this->belongsTo(Kamar::class);
     }
 
-    public function pembayarans()
+    public function pembayaran()
     {
         return $this->hasMany(Pembayaran::class);
     }

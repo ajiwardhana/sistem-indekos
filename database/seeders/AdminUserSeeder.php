@@ -10,14 +10,11 @@ class AdminUserSeeder extends Seeder
 {
     public function run()
     {
-        User::create([
-            'name' => 'Admin kos',
-            'email' => 'ajiwardhana001@gmail.com',
-            'password' => Hash::make('admin'), // Ganti dengan password yang aman
-            'role' => 'admin',
-            'email_verified_at' => now(),
-        ]);
-        
-        $this->command->info('Admin user created successfully!');
-    }
+        \App\Models\User::create([
+        'name' => 'Admin Kosan',
+        'email' => 'ajiwardhana001@gmail.com',
+        'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+        'role' => 'admin',
+    ]);
+}
 }

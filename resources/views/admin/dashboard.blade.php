@@ -2,9 +2,12 @@
 
 @section('content')
 <div class="container">
-    <h1>Admin Dashboard</h1>
-    <p>Selamat datang di panel admin</p>
-    
-    <!-- Tambahkan konten dashboard admin di sini -->
+    <h1>Dashboard Admin</h1>
+    <div class="card">
+        <div class="card-body">
+            <p>Selamat datang, {{ auth()->user()->name }} (Admin)</p>
+            <a href="{{ route('admin.kamar.index') }}" class="btn btn-primary">Kelola Kamar</a>
+        </div>
+    </div>
 </div>
 @endsection

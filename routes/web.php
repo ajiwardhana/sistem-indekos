@@ -15,40 +15,19 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordController;
 
 
-Route::get('/', function () {
-    return auth()->check() 
-        ? redirect()->route('home') 
-        : view('auth.login');
-});
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
-    ->name('home')
-    ->middleware('auth');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::resource('pembayaran', PembayaranController::class)
-    ->middleware('auth');
-
-// Route khusus untuk verifikasi
-Route::post('/pembayaran/verify/{id}', [PembayaranController::class, 'verify'])
-    ->name('pembayaran.verify')
-    ->middleware(['auth', 'admin']);
-
-// Grup route admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Route Kamar
+// Grup route untuk Admin
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::resource('kamar', \App\Http\Controllers\Admin\KamarController::class);
-    
-    // Route lainnya
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/pembayaran', [AdminController::class, 'pembayaran'])->name('pembayaran');
-    Route::get('/penyewaan', [AdminController::class, 'penyewaan'])->name('penyewaan');
-    Route::get('/pengguna', [AdminController::class, 'pengguna'])->name('pengguna');
+    Route::resource('penyewaan', \App\Http\Controllers\Admin\PenyewaanController::class);
+    Route::resource('pembayaran', \App\Http\Controllers\Admin\PembayaranController::class);
+});
+
+// Grup route untuk User Biasa
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('kamar', \App\Http\Controllers\KamarController::class)->only(['index', 'show']);
+    Route::resource('penyewaan', \App\Http\Controllers\PenyewaanController::class);
 });
 
 require __DIR__.'/auth.php';
