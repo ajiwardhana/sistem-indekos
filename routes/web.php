@@ -15,17 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 // Route untuk admin
-Route::prefix('admin')
-     ->middleware(['auth', 'admin'])
-     ->group(function () {
-         Route::get('/dashboard', function () {
-             return view('admin.dashboard');
-         })->name('admin.dashboard');
-     
-    Route::resource('admin/kamar', KamarController::class);
-    Route::resource('admin/penyewa', PenyewaController::class);
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::resource('kamar', KamarController::class);
+    Route::resource('penyewa', PenyewaController::class);
     Route::resource('admin/pembayaran', PembayaranController::class);
     Route::get('/admin/pembayaran/{pembayaran}/cetak', [PembayaranController::class, 'cetak'])->name('pembayaran.cetak');
 

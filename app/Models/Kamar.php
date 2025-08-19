@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kamar extends Model
 {
+    protected $table = 'kamar';
     use HasFactory;
 
     protected $fillable = [

@@ -22,7 +22,7 @@ class PembayaranController extends Controller
                 $query->where('user_id', auth()->id());
             })->with('penyewaan')->latest()->get();
 
-        return view('pembayaran.index', compact('pembayarans'));
+        return view('pembayaran.index', compact('pembayaran'));
     }
 
     /**
