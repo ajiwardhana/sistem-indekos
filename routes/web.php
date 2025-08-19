@@ -6,10 +6,14 @@ use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProfileController;
+
+use App\Http\Controllers\Admin\SettingsController;
 
 
 
