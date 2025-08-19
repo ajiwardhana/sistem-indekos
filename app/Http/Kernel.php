@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $routeMiddleware = [
+protected $routeMiddleware = [
     'auth' => \App\Http\Middleware\Authenticate::class,
     'auth.basic' => \App\Http\Middleware\AuthenticateWithBasicAuth::class,
     'auth.session' => \App\Http\Middleware\ValidateSession::class,
@@ -27,7 +27,7 @@ class Kernel extends HttpKernel
     'throttle' => \App\Http\Middleware\ThrottleRequests::class,
     'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
     
-    // PASTIKAN INI ADA DAN BENAR
+    // PASTIKAN PERSIS SEPERTI INI:
     'admin' => \App\Http\Middleware\AdminMiddleware::class,
 ];
 }

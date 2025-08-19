@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class KamarController extends Controller
 {
+    public function __construct()
+    {
+        // Pengecekan manual untuk admin
+        $this->middleware(function ($request, $next) {
+            if (!Auth::check() || Auth::user()->role !== 'admin') {
+                abort(403, 'Akses ditolak. Hanya administrator.');
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      */
