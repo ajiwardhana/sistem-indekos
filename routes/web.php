@@ -27,8 +27,11 @@ Route::middleware('auth')->group(function () {
 Auth::routes(['register' => false]); // Nonaktifkan registrasi jika tidak diperlukan        
 
 // Route untuk admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('kamar', 'App\Http\Controllers\Admin\KamarController');
+
     // Route Kamar
+    route('admin.kamar.create');
     Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamar/create', [KamarController::class, 'create'])->name('kamar.create');
     Route::post('/kamar', [KamarController::class, 'store'])->name('kamar.store');

@@ -23,7 +23,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h1 class="fw-bold">Dashboard</h1>
+            <h1 class="fw-bold">Dashboard Sikosan</h1>
             <p class="text-muted">Selamat datang kembali, {{ auth()->user()->name }}!</p>
         </div>
     </div>
