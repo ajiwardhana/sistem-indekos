@@ -16,10 +16,19 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \App\Http\Middleware\AuthenticateWithBasicAuth::class,
+    'auth.session' => \App\Http\Middleware\ValidateSession::class,
+    'cache.headers' => \App\Http\Middleware\SetCacheHeaders::class,
+    'can' => \App\Http\Middleware\Authorize::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'password.confirm' => \App\Http\Middleware\RequirePassword::class,
+    'signed' => \App\Http\Middleware\ValidateSignature::class,
+    'throttle' => \App\Http\Middleware\ThrottleRequests::class,
+    'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
     
-
+    // PASTIKAN INI ADA DAN BENAR
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
 ];
 }
 

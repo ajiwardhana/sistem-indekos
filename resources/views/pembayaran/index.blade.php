@@ -1,62 +1,68 @@
 @extends('layouts.app')
 
+@section('title', 'Manajemen Pembayaran')
+
 @section('content')
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Daftar Pembayaran</h1>
-        <a href="{{ route('pembayaran.create') }}" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Pembayaran
-        </a>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="fw-bold">Manajemen Pembayaran</h1>
+            <p class="text-muted">Daftar semua pembayaran</p>
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="card shadow mb-4">
+    <div class="card shadow">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-light">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <th>No</th>
+                            <th>ID</th>
                             <th>Penyewa</th>
-                            <th>Bulan</th>
                             <th>Jumlah</th>
                             <th>Tanggal</th>
-                            <th>Metode</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($pembayarans as $pembayaran)
+                        @forelse($pembayaran as $payment)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $pembayaran->penyewa->nama }}</td>
-                            <td>{{ \Carbon\Carbon::parse($pembayaran->bulan)->translatedFormat('F Y') }}</td>
-                            <td>Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
-                            <td>{{ $pembayaran->tanggal->format('d/m/Y') }}</td>
-                            <td>{{ ucfirst($pembayaran->metode_pembayaran) }}</td>
+                            <td>{{ $payment->id }}</td>
+                            <td>{{ $payment->penyewaan->user->name ?? 'N/A' }}</td>
+                            <td>Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</td>
+                            <td>{{ $payment->tanggal_pembayaran->format('d M Y') }}</td>
                             <td>
-                                <a href="{{ route('pembayaran.show', $pembayaran->id) }}" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('pembayaran.cetak', $pembayaran->id) }}" class="btn btn-sm btn-success" target="_blank">
-                                    <i class="fas fa-print"></i>
-                                </a>
+                                <span class="badge bg-{{ 
+                                    $payment->status === 'lunas' ? 'success' : 
+                                    ($payment->status === 'pending' ? 'warning' : 'danger') 
+                                }}">
+                                    {{ ucfirst($payment->status) }}
+                                </span>
+                            </td>
+                            <td>
+                                @if(Auth::user()->isAdmin() && $payment->status === 'pending')
+                                <div class="btn-group">
+                                    <form action="{{ route('admin.pembayaran.approve', $payment->id) }}" method="POST">
+                                        @csrf @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                    </form>
+                                    <form action="{{ route('admin.pembayaran.reject', $payment->id) }}" method="POST">
+                                        @csrf @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                </div>
+                                @endif
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center">Tidak ada data pembayaran</td>
+                            <td colspan="6" class="text-center">Belum ada data pembayaran</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $pembayarans->links() }}
         </div>
     </div>
 </div>

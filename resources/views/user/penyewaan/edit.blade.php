@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label for="kamar_id">Kamar</label>
                     <select name="kamar_id" id="kamar_id" class="form-control @error('kamar_id') is-invalid @enderror" required>
-                        @foreach($kamars as $kamar)
+                        @foreach($kamar as $kamar)
                             <option value="{{ $kamar->id }}" 
                                 @if($penyewaan->kamar_id == $kamar->id || old('kamar_id') == $kamar->id) selected @endif>
                                 {{ $kamar->nomor_kamar }} - {{ $kamar->tipe }}

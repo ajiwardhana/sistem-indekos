@@ -2,25 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pembayaran extends Model
 {
+    use HasFactory;
+
+    // Tentukan nama tabel secara eksplisit
     protected $table = 'pembayaran';
-    protected $casts = [
-    'tanggal_pembayaran' => 'datetime', // Cast ke format date
-];
+
     protected $fillable = [
-        'penyewaan_id', 'jumlah', 'tanggal_pembayaran', 'metode_pembayaran', 'bukti_pembayaran', 'status'
+        'penyewaan_id',
+        'jumlah',
+        'tanggal_pembayaran',
+        'status',
+        'bukti_pembayaran',
+        'metode_pembayaran'
     ];
 
-    public function penyewa()
-{
-    return $this->belongsTo(Penyewa::class);
-}
+    protected $casts = [
+        'tanggal_pembayaran' => 'date',
+        'jumlah' => 'integer'
+    ];
 
-    public function pembayaran()
+    /**
+     * Relationship ke model Penyewaan
+     */
+    public function penyewaan()
     {
-        return $this->hasMany(Pembayaran::class);
+        return $this->belongsTo(Penyewaan::class);
     }
 }

@@ -1,29 +1,49 @@
 <?php
 
 namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Kamar;
-use App\Models\Pembayaran;
 
 class Penyewaan extends Model
 {
-    protected $fillable = [
-        'user_id', 'kamar_id', 'tanggal_mulai', 'tanggal_selesai', 'status', 'total_pembayaran'
-    ];
+    use HasFactory;
 
+    // Tentukan nama tabel secara eksplisit
     protected $table = 'penyewaan';
 
+    protected $fillable = [
+        'user_id',
+        'kamar_id',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'status'
+    ];
+
+    protected $casts = [
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date'
+    ];
+
+    /**
+     * Relationship ke model User
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relationship ke model Kamar
+     */
     public function kamar()
     {
         return $this->belongsTo(Kamar::class);
     }
 
+    /**
+     * Relationship ke model Pembayaran
+     */
     public function pembayaran()
     {
         return $this->hasMany(Pembayaran::class);

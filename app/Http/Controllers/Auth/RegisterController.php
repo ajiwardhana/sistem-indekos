@@ -40,6 +40,18 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function redirectTo()
+{
+    // Redirect berdasarkan role user
+    if (auth()->check()) {
+        if (auth()->user()->role === 'admin') {
+            return '/admin/dashboard';
+        }
+        return '/home';
+    }
+    return '/login';
+}
+
     /**
      * Get a validator for an incoming registration request.
      *

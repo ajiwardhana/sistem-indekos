@@ -65,7 +65,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <i class="fas fa-home"></i> {{ config('app.name', 'Sikosan') }}
+                <i class="fas fa-home"></i> Sistem Indekos
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
@@ -81,10 +81,16 @@
                         </li>
                         @if(auth()->user()->isAdmin())
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                            <a class="nav-link" href="{{ route('dashboard') }}">
                                 <i class="fas fa-users-cog"></i> Admin
                             </a>
                         </li>
+                        <li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.kamar.index') }}">
+        <i class="fas fa-bed"></i>
+        <span>Kelola Kamar</span>
+    </a>
+</li>
                         @endif
                     @endauth
                 </ul>
@@ -102,7 +108,7 @@
                                 <i class="fas fa-user-circle"></i> {{ Auth::user()->name }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">
+                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="fas fa-user"></i> Profil
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>

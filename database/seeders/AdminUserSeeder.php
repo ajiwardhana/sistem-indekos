@@ -2,21 +2,24 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AdminUserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        \App\Models\User::create([
-        'name' => 'Admin Kosan',
-        'email' => 'ajiwardhana001@gmail.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
-        'role' => 'admin',
-    ]);
-}
+        User::create([
+            'name' => 'Admin Kos',
+            'email' => 'ajiwardhana001@gmail.com',
+            'password' => Hash::make('admin123'), // Ganti password
+            'role' => 'admin',
+            'email_verified_at' => now(),
+            'phone' => '081234567890',
+            'address' => 'Alamat admin'
+        ]);
+
+        $this->command->info('Admin user created successfully!');
+    }
 }

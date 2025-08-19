@@ -1,3 +1,20 @@
+@php
+    // Set default values untuk menghindari error
+    $lastPayment = $lastPayment ?? null;
+    $userKamarStatus = $userKamarStatus ?? 'Tidak aktif';
+    $currentBill = $currentBill ?? 0;
+    $recentPayments = $recentPayments ?? collect([]);
+    $rentalHistory = $rentalHistory ?? collect([]);
+    
+    // Untuk admin
+    $totalPendapatanBulanIni = $totalPendapatanBulanIni ?? 0;
+    $pembayaranLunasCount = $pembayaranLunasCount ?? 0;
+    $pembayaranPendingCount = $pembayaranPendingCount ?? 0;
+    $kamarTerisiCount = $kamarTerisiCount ?? 0;
+    $totalKamarCount = $totalKamarCount ?? 0;
+    $monthlyStats = $monthlyStats ?? collect([]);
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Dashboard')

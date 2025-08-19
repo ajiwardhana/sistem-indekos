@@ -23,8 +23,8 @@ class PenyewaController extends Controller
      */
     public function create()
     {
-        $kamars = Kamar::where('status', 'tersedia')->get();
-        return view('penyewa.create', compact('kamars'));
+        $kamar = Kamar::where('status', 'tersedia')->get();
+        return view('penyewa.create', compact('kamar'));
     }
 
     /**
@@ -37,7 +37,7 @@ class PenyewaController extends Controller
             'email' => 'required|email|unique:penyewas',
             'no_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
-            'kamar_id' => 'required|exists:kamars,id',
+            'kamar_id' => 'required|exists:kamar,id',
             'tanggal_masuk' => 'required|date',
             'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:aktif,nonaktif',
@@ -70,11 +70,11 @@ class PenyewaController extends Controller
      */
     public function edit(Penyewa $penyewa)
     {
-        $kamars = Kamar::where('status', 'tersedia')
+        $kamar = Kamar::where('status', 'tersedia')
             ->orWhere('id', $penyewa->kamar_id)
             ->get();
             
-        return view('penyewa.edit', compact('penyewa', 'kamars'));
+        return view('penyewa.edit', compact('penyewa', 'kamar'));
     }
 
     /**
@@ -87,7 +87,7 @@ class PenyewaController extends Controller
             'email' => 'required|email|unique:penyewas,email,'.$penyewa->id,
             'no_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
-            'kamar_id' => 'required|exists:kamars,id',
+            'kamar_id' => 'required|exists:kamar,id',
             'tanggal_masuk' => 'required|date',
             'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:aktif,nonaktif',

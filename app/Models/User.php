@@ -27,8 +27,27 @@ class User extends Authenticatable
     return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
 }
 
+
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is regular user
+     */
+    public function isUser()
+    {
+        return $this->role === 'pelanggan';
+    }
+
+    // Relasi jika diperlukan
+    public function kamar()
+    {
+        return $this->hasMany(Kamar::class, 'user_id');
+    }
+    public function pembayaran()
+    {
+        return $this->hasMany(Pembayaran::class, 'user_id');
     }
 }

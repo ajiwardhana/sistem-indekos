@@ -28,8 +28,8 @@ class PenyewaanController extends Controller
      */
     public function create()
     {
-        $kamars = Kamar::where('status', 'tersedia')->get();
-        return view('penyewaan.create', compact('kamars'));
+        $kamar = Kamar::where('status', 'tersedia')->get();
+        return view('penyewaan.create', compact('kamar'));
     }
 
     /**
@@ -38,7 +38,7 @@ class PenyewaanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kamar_id' => 'required|exists:kamars,id',
+            'kamar_id' => 'required|exists:kamar,id',
             'tanggal_mulai' => 'required|date|after_or_equal:today',
             'durasi' => 'required|integer|min:1', // durasi dalam bulan
         ]);
@@ -79,11 +79,11 @@ class PenyewaanController extends Controller
     {
         $this->authorize('update', $penyewaan);
         
-        $kamars = Kamar::where('status', 'tersedia')
+        $kamar = Kamar::where('status', 'tersedia')
             ->orWhere('id', $penyewaan->kamar_id)
             ->get();
             
-        return view('penyewaan.edit', compact('penyewaan', 'kamars'));
+        return view('penyewaan.edit', compact('penyewaan', 'kamar'));
     }
 
     /**
@@ -94,7 +94,7 @@ class PenyewaanController extends Controller
         $this->authorize('update', $penyewaan);
         
         $validated = $request->validate([
-            'kamar_id' => 'required|exists:kamars,id',
+            'kamar_id' => 'required|exists:kamar,id',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'status' => 'required|in:aktif,selesai,dibatalkan',

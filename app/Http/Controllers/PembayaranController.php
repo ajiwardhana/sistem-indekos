@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pembayaran;
-use App\Models\Penyewa;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pembayaran;
+use App\Models\Penyewaan;
 
 class PembayaranController extends Controller
 {
@@ -14,8 +14,21 @@ class PembayaranController extends Controller
      */
     public function index()
     {
-        $pembayarans = Pembayaran::with('penyewa')->latest()->paginate(10);
-        return view('pembayaran.index', compact('pembayarans'));
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            $pembayaran = Pembayaran::with('penyewaan.user')
+                ->latest()
+                ->get();
+        } else {
+            $pembayaran = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->latest()
+                ->get();
+        }
+        
+        return view('pembayaran.index', compact('pembayaran'));
     }
 
     /**
@@ -23,8 +36,8 @@ class PembayaranController extends Controller
      */
     public function create()
     {
-        $penyewas = Penyewa::where('status', 'aktif')->get();
-        return view('pembayaran.create', compact('penyewas'));
+        // Logika untuk form create pembayaran
+        return view('pembayaran.create');
     }
 
     /**
@@ -32,22 +45,7 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'penyewa_id' => 'required|exists:penyewas,id',
-            'jumlah' => 'required|numeric|min:1',
-            'tanggal' => 'required|date',
-            'bulan' => 'required|date_format:Y-m',
-            'metode_pembayaran' => 'required|in:transfer,tunai',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
-
-        // Tambahkan tahun ke bulan
-        $validated['bulan'] = Carbon::createFromFormat('Y-m', $validated['bulan'])->format('Y-m');
-
-        Pembayaran::create($validated);
-
-        return redirect()->route('pembayaran.index')
-            ->with('success', 'Pembayaran berhasil dicatat');
+        // Logika untuk menyimpan pembayaran baru
     }
 
     /**
@@ -59,52 +57,20 @@ class PembayaranController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Approve pembayaran (untuk admin)
      */
-    public function edit(Pembayaran $pembayaran)
+    public function approve(Pembayaran $pembayaran)
     {
-        $penyewas = Penyewa::where('status', 'aktif')->get();
-        return view('pembayaran.edit', compact('pembayaran', 'penyewa'));
+        $pembayaran->update(['status' => 'lunas']);
+        return redirect()->back()->with('success', 'Pembayaran berhasil disetujui');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Reject pembayaran (untuk admin)
      */
-    public function update(Request $request, Pembayaran $pembayaran)
+    public function reject(Pembayaran $pembayaran)
     {
-        $validated = $request->validate([
-            'penyewa_id' => 'required|exists:penyewa,id',
-            'jumlah' => 'required|numeric|min:1',
-            'tanggal' => 'required|date',
-            'bulan' => 'required|date_format:Y-m',
-            'metode_pembayaran' => 'required|in:transfer,tunai',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
-
-        $validated['bulan'] = Carbon::createFromFormat('Y-m', $validated['bulan'])->format('Y-m');
-
-        $pembayaran->update($validated);
-
-        return redirect()->route('pembayaran.index')
-            ->with('success', 'Data pembayaran berhasil diperbarui');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pembayaran $pembayaran)
-    {
-        $pembayaran->delete();
-
-        return redirect()->route('pembayaran.index')
-            ->with('success', 'Pembayaran berhasil dihapus');
-    }
-
-    /**
-     * Cetak bukti pembayaran
-     */
-    public function cetak(Pembayaran $pembayaran)
-    {
-        return view('pembayaran.cetak', compact('pembayaran'));
+        $pembayaran->update(['status' => 'ditolak']);
+        return redirect()->back()->with('success', 'Pembayaran ditolak');
     }
 }

@@ -9,8 +9,8 @@ class KamarController extends Controller
 {
     public function index()
     {
-        $kamars = Kamar::latest()->paginate(10);
-        return view('admin.kamar.index', compact('kamars'));
+        $kamar = Kamar::latest()->paginate(10);
+        return view('admin.kamar.index', compact('kamar'));
     }
 
     public function create()
@@ -21,7 +21,7 @@ class KamarController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nomor_kamar' => 'required|unique:kamars|max:10',
+            'nomor_kamar' => 'required|unique:kamar|max:10',
             'harga' => 'required|numeric',
             'fasilitas' => 'nullable|string',
             'status' => 'required|in:tersedia,terisi,perbaikan',
@@ -41,7 +41,7 @@ class KamarController extends Controller
     public function update(Request $request, Kamar $kamar)
     {
         $validated = $request->validate([
-            'nomor_kamar' => 'required|max:10|unique:kamars,nomor_kamar,'.$kamar->id,
+            'nomor_kamar' => 'required|max:10|unique:kamar,nomor_kamar,'.$kamar->id,
             'harga' => 'required|numeric',
             'fasilitas' => 'nullable|string',
             'status' => 'required|in:tersedia,terisi,perbaikan',

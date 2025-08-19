@@ -13,7 +13,7 @@
                     <label for="kamar_id">Pilih Kamar</label>
                     <select name="kamar_id" id="kamar_id" class="form-control @error('kamar_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Kamar --</option>
-                        @foreach($kamars as $kamar)
+                        @foreach($kamar as $kamar)
                             <option value="{{ $kamar->id }}" 
                                 data-harga="{{ $kamar->harga }}"
                                 @if(old('kamar_id') == $kamar->id) selected @endif>
