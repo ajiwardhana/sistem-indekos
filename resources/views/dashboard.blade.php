@@ -1,19 +1,27 @@
 @php
-    // Set default values untuk menghindari error
-    $lastPayment = $lastPayment ?? null;
-    $userKamarStatus = $userKamarStatus ?? 'Tidak aktif';
-    $currentBill = $currentBill ?? 0;
-    $recentPayments = $recentPayments ?? collect([]);
-    $rentalHistory = $rentalHistory ?? collect([]);
-    
-    // Untuk admin
+    // Default values untuk semua variable yang mungkin digunakan
     $totalPendapatanBulanIni = $totalPendapatanBulanIni ?? 0;
     $pembayaranLunasCount = $pembayaranLunasCount ?? 0;
     $pembayaranPendingCount = $pembayaranPendingCount ?? 0;
     $kamarTerisiCount = $kamarTerisiCount ?? 0;
-    $totalKamarCount = $totalKamarCount ?? 0;
-    $monthlyStats = $monthlyStats ?? collect([]);
+    $totalKamarCount = $totalKamarCount ?? 0; // INI YANG DIPERBAIKI
+    $monthlyStats = $monthlyStats ?? collect();
+    $recentPayments = $recentPayments ?? collect();
+    $lastPayment = $lastPayment ?? null;
+    $userKamarStatus = $userKamarStatus ?? 'Tidak aktif';
+    $currentBill = $currentBill ?? 0;
+    $rentalHistory = $rentalHistory ?? collect();
+    $totalKost = $totalKost ?? 0; // Jika diperlukan
 @endphp
+
+{{-- Untuk admin --}}
+@auth
+    @if(auth()->user()->isAdmin())
+        <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard Admin</a>
+    @else
+        <a href="{{ route('user.dashboard') }}" class="nav-link">Dashboard Saya</a>
+    @endif
+@endauth
 
 @extends('layouts.app')
 

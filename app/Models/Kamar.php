@@ -32,6 +32,11 @@ class Kamar extends Model
         return $this->hasMany(Penyewaan::class);
     }
 
+    public function kamar()
+    {
+        return $this->belongsTo(kamar::class);
+    }
+
     /**
      * Get URL foto
      */

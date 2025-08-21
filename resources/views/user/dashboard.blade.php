@@ -1,209 +1,122 @@
+@php
+    // Default values untuk semua variable
+    $lastPayment = $lastPayment ?? null;
+    $userKamarStatus = $userKamarStatus ?? 'Tidak aktif';
+    $currentBill = $currentBill ?? 0;
+    $recentPayments = $recentPayments ?? collect();
+    $rentalHistory = $rentalHistory ?? collect();
+@endphp
+
 @extends('layouts.app')
 
+@section('title', 'Dashboard User - Sistem Indekos')
+
 @section('content')
-<div class="container-fluid py-4">
-    <!-- Header Dashboard -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard Penyewa</h1>
-        <div class="d-flex">
-            <span class="badge bg-primary p-2 me-2">
-                <i class="fas fa-calendar me-1"></i> {{ now()->format('d F Y') }}
-            </span>
-            @if($penyewaanAktif)
-            <span class="badge bg-success p-2">
-                <i class="fas fa-check-circle me-1"></i> Aktif
-            </span>
-            @endif
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title"><i class="bi bi-speedometer2 me-2"></i>Dashboard User</h2>
     </div>
 
-    <!-- Info Cards -->
+    <!-- Stats Cards untuk User -->
     <div class="row mb-4">
-        <!-- Kamar Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Kamar Anda</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ $penyewaanAktif->kamar->nomor_kamar ?? '-' }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-door-open fa-2x text-gray-300"></i>
-                        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="stats-card primary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Status Kamar</h5>
+                        <h4>{{ $userKamarStatus }}</h4>
                     </div>
+                    <i class="bi bi-door-closed fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
-
-        <!-- Pembayaran Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Pembayaran Terakhir</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @if($penyewaanAktif && $penyewaanAktif->pembayaran->count() > 0)
-                                    Rp {{ number_format($penyewaanAktif->pembayaran->first()->jumlah, 0, ',', '.') }}
-                                @else
-                                    -
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
-                        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="stats-card warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Tagihan Bulan Ini</h5>
+                        <h4>Rp {{ number_format($currentBill, 0, ',', '.') }}</h4>
                     </div>
+                    <i class="bi bi-currency-dollar fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
-
-        <!-- Tanggal Mulai Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Tanggal Mulai</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @if($penyewaanAktif)
-                                    {{ \Carbon\Carbon::parse($penyewaanAktif->tanggal_mulai)->format('d M Y') }}
-                                @else
-                                    -
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
-                        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="stats-card info">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Pembayaran Terakhir</h5>
+                        <h4>
+                            @if($lastPayment)
+                                Rp {{ number_format($lastPayment->jumlah, 0, ',', '.') }}
+                            @else
+                                Belum ada
+                            @endif
+                        </h4>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Durasi Sewa</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @if($penyewaanAktif)
-                                    {{ \Carbon\Carbon::parse($penyewaanAktif->tanggal_mulai)->diffInMonths(now()) }} Bulan
-                                @else
-                                    -
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <i class="bi bi-clock-history fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Riwayat dan Pembayaran -->
     <div class="row">
-        <!-- Penyewaan Aktif Section -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
-                    <h6 class="m-0 font-weight-bold text-white">
-                        <i class="fas fa-home me-1"></i> Informasi Kamar
-                    </h6>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Pembayaran Terbaru</h5>
                 </div>
                 <div class="card-body">
-                    @include('partials.penyewaan-aktif', ['penyewaan' => $penyewaanAktif])
+                    @if($recentPayments->count() > 0)
+                        <div class="list-group">
+                            @foreach($recentPayments as $payment)
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Pembayaran #{{ $payment->id }}</h6>
+                                        <span class="badge bg-{{ $payment->status == 'lunas' ? 'success' : 'warning' }}">
+                                            {{ $payment->status }}
+                                        </span>
+                                    </div>
+                                    <p class="mb-1">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</p>
+                                    <small class="text-muted">{{ $payment->created_at->format('d M Y H:i') }}</small>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted text-center py-4">Belum ada riwayat pembayaran</p>
+                    @endif
                 </div>
             </div>
         </div>
-
-        <!-- Riwayat Pembayaran Section -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-info">
-                    <h6 class="m-0 font-weight-bold text-white">
-                        <i class="fas fa-history me-1"></i> Riwayat Pembayaran
-                    </h6>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Riwayat Penyewaan</h5>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <th>Jumlah</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($riwayatPembayaran as $pembayaran)
-                                <tr>
-                                    <td>{{ $pembayaran->tanggal->format('d M Y') }}</td>
-                                    <td class="text-end">Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
-                                    <td><span class="badge bg-success">Lunas</span></td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">Belum ada riwayat pembayaran</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                    @if($rentalHistory->count() > 0)
+                        <div class="list-group">
+                            @foreach($rentalHistory as $rental)
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Kamar {{ $rental->kamar->nomor_kamar }}</h6>
+                                        <span class="badge bg-{{ $rental->status == 'aktif' ? 'success' : 'secondary' }}">
+                                            {{ $rental->status }}
+                                        </span>
+                                    </div>
+                                    <p class="mb-1">{{ $rental->kamar->kost->nama_kost }}</p>
+                                    <small class="text-muted">
+                                        {{ $rental->tanggal_mulai->format('d M Y') }} - 
+                                        {{ $rental->tanggal_selesai ? $rental->tanggal_selesai->format('d M Y') : 'Sekarang' }}
+                                    </small>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted text-center py-4">Belum ada riwayat penyewaan</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Welcome Message -->
-    <div class="row mt-2">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-body text-center py-5">
-                    <h3 class="text-primary mb-3">Selamat datang di Sistem Indekos!</h3>
-                    <p class="lead">
-                        @if($penyewaanAktif)
-                            Anda menyewa kamar {{ $penyewaanAktif->kamar->nomor_kamar }} sejak 
-                            {{ \Carbon\Carbon::parse($penyewaanAktif->tanggal_mulai)->format('d F Y') }}
-                        @else
-                            Anda belum memiliki kamar yang disewa
-                        @endif
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
-
-@push('styles')
-<style>
-    .card {
-        border-radius: 0.5rem;
-    }
-    .card-header {
-        border-radius: 0.5rem 0.5rem 0 0 !important;
-    }
-    .table th {
-        white-space: nowrap;
-    }
-</style>
-
-<script>
-    // Animasi saat load
-    document.addEventListener('DOMContentLoaded', function() {
-        $('.card').hide().fadeIn(500);
-    });
-</script>
-@endpush
