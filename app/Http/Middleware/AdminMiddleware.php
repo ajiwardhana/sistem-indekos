@@ -15,26 +15,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        abort(403, 'Unauthorized access.');
-    }
-
-    /**
-     * Determine if the user is an admin.
-     *
-     * @return bool
-     */
-    public function isAdmin(): bool
-    {
-        return Auth::check() && Auth::user()->role === 'admin';
-    }   
-
-    /**
-     * Determine if the user is a regular user.
-     *
-     * @return bool
-     */
-    public function isUser(): bool
-    {
-        return Auth::check() && Auth::user()->role === 'user';
+        return redirect('/dashboard')->with('error', 'Unauthorized access.');
     }
 }

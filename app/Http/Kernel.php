@@ -17,18 +17,17 @@ class Kernel extends HttpKernel
      */
 protected $routeMiddleware = [
     'auth' => \App\Http\Middleware\Authenticate::class,
-    'auth.basic' => \App\Http\Middleware\AuthenticateWithBasicAuth::class,
-    'auth.session' => \App\Http\Middleware\ValidateSession::class,
-    'cache.headers' => \App\Http\Middleware\SetCacheHeaders::class,
-    'can' => \App\Http\Middleware\Authorize::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+    'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+    'can' => \Illuminate\Auth\Middleware\Authorize::class,
     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-    'password.confirm' => \App\Http\Middleware\RequirePassword::class,
+    'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+    'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
     'signed' => \App\Http\Middleware\ValidateSignature::class,
-    'throttle' => \App\Http\Middleware\ThrottleRequests::class,
-    'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-    
-    // PASTIKAN PERSIS SEPERTI INI:
-    'admin' => \App\Http\Middleware\AdminMiddleware::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'admin' => \App\Http\Middleware\AdminMiddleware::class, // PASTIKAN INI ADA
 ];
 }
 

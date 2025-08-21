@@ -16,15 +16,14 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Redirect berdasarkan role
         if ($user->isAdmin()) {
-            return $this->adminDashboard();
+            return redirect()->route('admin.dashboard');
         }
         
-        return $this->userDashboard();
+        return redirect()->route('user.dashboard');
     }
     
-    protected function adminDashboard()
+    public function adminDashboard()
     {
         $user = Auth::user();
         
@@ -32,20 +31,6 @@ class DashboardController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        // Initialize semua variable dengan default values
-        $defaultVariables = [
-            'totalPendapatanBulanIni' => 0,
-            'pembayaranLunasCount' => 0,
-            'pembayaranPendingCount' => 0,
-            'totalKamarCount' => 0,
-            'kamarTersedia' => 0,
-            'kamarTerisi' => 0,
-            'kamarMaintenance' => 0,
-            'totalKostCount' => 0,
-            'monthlyStats' => collect(),
-            'recentPayments' => collect(),
-        ];
-        
         try {
             // Hitung total pendapatan bulan ini
             $totalPendapatanBulanIni = Pembayaran::where('status', 'lunas')
@@ -67,9 +52,7 @@ class DashboardController extends Controller
             $kamarTerisi = Kamar::where('status', 'terisi')->count();
             $kamarMaintenance = Kamar::where('status', 'maintenance')->count();
             
-            // Hitung total kost
-            $totalKostCount = Kost::count();
-            
+        
             // Statistik bulanan untuk chart
             $monthlyStats = Pembayaran::selectRaw('
                     MONTH(created_at) as month, 
@@ -96,9 +79,18 @@ class DashboardController extends Controller
                 ->get();
                 
         } catch (\Exception $e) {
+            // Default values jika error
+            $totalPendapatanBulanIni = 0;
+            $pembayaranLunasCount = 0;
+            $pembayaranPendingCount = 0;
+            $totalKamarCount = 0;
+            $kamarTersedia = 0;
+            $kamarTerisi = 0;
+            $kamarMaintenance = 0;
+            $monthlyStats = collect();
+            $recentPayments = collect();
+            
             \Log::error('Admin Dashboard Error: ' . $e->getMessage());
-            // Gunakan default values jika error
-            extract($defaultVariables);
         }
         
         return view('admin.dashboard', compact(
@@ -109,13 +101,12 @@ class DashboardController extends Controller
             'kamarTersedia',
             'kamarTerisi',
             'kamarMaintenance',
-            'totalKostCount',
             'monthlyStats',
             'recentPayments'
         ));
     }
     
-    protected function userDashboard()
+    public function userDashboard()
     {
         $user = Auth::user();
         
@@ -123,15 +114,6 @@ class DashboardController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        // Initialize default values
-        $defaultVariables = [
-            'lastPayment' => null,
-            'userKamarStatus' => 'Tidak aktif',
-            'currentBill' => 0,
-            'recentPayments' => collect(),
-            'rentalHistory' => collect(),
-        ];
-        
         try {
             // Pembayaran terakhir user
             $lastPayment = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
@@ -167,9 +149,14 @@ class DashboardController extends Controller
                 ->get();
                 
         } catch (\Exception $e) {
+            // Default values jika error
+            $lastPayment = null;
+            $userKamarStatus = 'Tidak aktif';
+            $currentBill = 0;
+            $recentPayments = collect();
+            $rentalHistory = collect();
+            
             \Log::error('User Dashboard Error: ' . $e->getMessage());
-            // Gunakan default values jika error
-            extract($defaultVariables);
         }
         
         return view('user.dashboard', compact(
