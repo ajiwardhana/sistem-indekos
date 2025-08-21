@@ -18,13 +18,13 @@ class DashboardController extends Controller
         
         // Redirect berdasarkan role
         if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard');
+            return $this->adminDashboard();
         }
         
-        return redirect()->route('dashboard');
+        return $this->userDashboard();
     }
     
-    public function adminDashboard()
+    protected function adminDashboard()
     {
         $user = Auth::user();
         
@@ -115,7 +115,7 @@ class DashboardController extends Controller
         ));
     }
     
-    public function userDashboard()
+    protected function userDashboard()
     {
         $user = Auth::user();
         

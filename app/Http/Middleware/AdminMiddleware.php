@@ -11,14 +11,30 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return $next($request);
         }
 
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Akses ditolak. Hanya administrator.');
-        }
+        abort(403, 'Unauthorized access.');
+    }
 
-        return $next($request);
+    /**
+     * Determine if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return Auth::check() && Auth::user()->role === 'admin';
+    }   
+
+    /**
+     * Determine if the user is a regular user.
+     *
+     * @return bool
+     */
+    public function isUser(): bool
+    {
+        return Auth::check() && Auth::user()->role === 'user';
     }
 }

@@ -13,40 +13,30 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Dashboard Routes untuk semua user
+// Dashboard utama - akan redirect otomatis berdasarkan role
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
 
-// Admin Routes Group
+// Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Admin Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])
-        ->name('dashboard');
+    // Route untuk admin dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Kost Management
+    // Resource routes
     Route::resource('kost', KostController::class);
-    
-    // Kamar Management
     Route::resource('kamar', KamarController::class);
-    
-    // Penyewa Management
     Route::resource('penyewa', PenyewaController::class);
-    
-    // Pembayaran Management
     Route::resource('pembayaran', PembayaranController::class);
-    
-    // Penyewaan Management
     Route::resource('penyewaan', PenyewaanController::class);
 });
 
 // User Routes (Non-Admin)
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
-    // User Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'userDashboard'])
-        ->name('dashboard');
+    // Route untuk user dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Profile
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });

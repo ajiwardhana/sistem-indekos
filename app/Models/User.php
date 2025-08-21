@@ -38,7 +38,7 @@ class User extends Authenticatable
      */
     public function isUser()
     {
-        return $this->role === 'pelanggan';
+        return $this->role === 'user';
     }
 
     // Relasi jika diperlukan
