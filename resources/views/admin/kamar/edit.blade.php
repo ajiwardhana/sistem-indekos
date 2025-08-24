@@ -1,4 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.app') {{-- PERBAIKI: Ganti admin menjadi app --}}
+
+@section('title', isset($kamar) ? 'Edit Kamar' : 'Tambah Kamar Baru')
 
 @section('content')
 <div class="container-fluid">
@@ -14,7 +16,8 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <form action="{{ isset($kamar) ? route('kamar.update', $kamar->id) : route('kamar.store') }}" method="POST">
+            {{-- PERBAIKI: Ganti kamar. menjadi admin.kamar. --}}
+            <form action="{{ isset($kamar) ? route('admin.kamar.update', $kamar->id) : route('admin.kamar.store') }}" method="POST">
                 @csrf
                 @isset($kamar)
                     @method('PUT')
@@ -76,7 +79,8 @@
                         Tambah Kamar
                     @endisset
                 </button>
-                <a href="{{ route('kamar.index') }}" class="btn btn-secondary">Kembali</a>
+                {{-- PERBAIKI: Ganti kamar.index menjadi admin.kamar.index --}}
+                <a href="{{ route('admin.kamar.index') }}" class="btn btn-secondary">Kembali</a>
             </form>
         </div>
     </div>

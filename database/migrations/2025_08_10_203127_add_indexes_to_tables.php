@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::table('penyewaan', function (Blueprint $table) {
+    Schema::table('penyewa', function (Blueprint $table) {
         
         $table->index('user_id');
         $table->index('status');
@@ -21,7 +21,7 @@ return new class extends Migration
         if (!Schema::hasIndex('pembayaran', 'pembayaran_tanggal_pembayaran_index')) {
             $table->index('tanggal_pembayaran', 'idx_tanggal_pembayaran');
         }
-        $table->index('penyewaan_id');
+        $table->index('penyewa_id');
         $table->index('tanggal_pembayaran');
     });
 

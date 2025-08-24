@@ -27,7 +27,7 @@ class Kamar extends Model
     /**
      * Relationship ke model Penyewaan
      */
-    public function penyewaan()
+    public function penyewa()
     {
         return $this->hasMany(Penyewaan::class);
     }

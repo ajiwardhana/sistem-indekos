@@ -17,11 +17,11 @@ class PembayaranController extends Controller
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            $pembayaran = Pembayaran::with('penyewaan.user')
+            $pembayaran = Pembayaran::with('penyewa.user')
                 ->latest()
                 ->get();
         } else {
-            $pembayaran = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
+            $pembayaran = Pembayaran::whereHas('penyewa', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
                 ->latest()

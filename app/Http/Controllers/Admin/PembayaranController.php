@@ -17,10 +17,10 @@ class PembayaranController extends Controller
     {
         // Admin melihat semua pembayaran, pelanggan hanya melihat miliknya
         $pembayarans = auth()->user()->isAdmin()
-            ? Pembayaran::with('penyewaan')->latest()->get()
-            : Pembayaran::whereHas('penyewaan', function($query) {
+            ? Pembayaran::with('penyewa')->latest()->get()
+            : Pembayaran::whereHas('penyewa', function($query) {
                 $query->where('user_id', auth()->id());
-            })->with('penyewaan')->latest()->get();
+            })->with('penyewa')->latest()->get();
 
         return view('pembayaran.index', compact('pembayaran'));
     }
@@ -30,12 +30,12 @@ class PembayaranController extends Controller
      */
     public function create()
     {
-        // Hanya ambil penyewaan aktif yang dimiliki user (untuk pelanggan)
-        $penyewaans = Penyewaan::where('user_id', auth()->id())
+        // Hanya ambil penyewa aktif yang dimiliki user (untuk pelanggan)
+        $penyewa = Penyewaan::where('user_id', auth()->id())
                         ->where('status', 'aktif')
                         ->get();
 
-        return view('pembayaran.create', compact('penyewaans'));
+        return view('pembayaran.create', compact('penyewa'));
     }
 
     /**
@@ -44,7 +44,7 @@ class PembayaranController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'penyewaan_id' => 'required|exists:penyewaan,id',
+            'penyewa_id' => 'required|exists:penyewa,id',
             'jumlah' => 'required|numeric|min:1',
             'tanggal_pembayaran' => 'required|date',
             'metode_pembayaran' => 'required|in:transfer,tunai',
@@ -85,8 +85,8 @@ class PembayaranController extends Controller
         $this->authorize('update', $pembayaran);
 
         // Hanya admin yang bisa edit pembayaran
-        $penyewaans = Penyewaan::all();
-        return view('pembayaran.edit', compact('pembayaran', 'penyewaans'));
+        $penyewa = Penyewaan::all();
+        return view('pembayaran.edit', compact('pembayaran', 'penyewa'));
     }
 
     /**

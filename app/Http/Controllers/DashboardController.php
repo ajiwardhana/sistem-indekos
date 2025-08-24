@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Penyewaan;
 use App\Models\Pembayaran;
 use App\Models\Kamar;
-use App\Models\Kost;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -73,7 +72,7 @@ class DashboardController extends Controller
                 });
             
             // Pembayaran terbaru
-            $recentPayments = Pembayaran::with(['penyewaan.user'])
+            $recentPayments = Pembayaran::with(['penyewa.user'])
                 ->latest()
                 ->take(5)
                 ->get();
@@ -116,7 +115,7 @@ class DashboardController extends Controller
 
         try {
             // Pembayaran terakhir user
-            $lastPayment = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
+            $lastPayment = Pembayaran::whereHas('penyewa', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
                 ->latest()
@@ -134,14 +133,14 @@ class DashboardController extends Controller
             $currentBill = $activeRental ? $activeRental->kamar->harga : 0;
             
             // Pembayaran terbaru user
-            $recentPayments = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
+            $recentPayments = Pembayaran::whereHas('penyewa', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
                 ->latest()
                 ->take(5)
                 ->get();
 
-            // Riwayat penyewaan user
+            // Riwayat penyewa user
             $rentalHistory = Penyewaan::with('kamar')
                 ->where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')

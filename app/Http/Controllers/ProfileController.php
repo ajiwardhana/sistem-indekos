@@ -56,4 +56,15 @@ class ProfileController extends Controller
 
         return redirect('/');
     }
+
+    public function adminProfile()
+{
+    return view('admin.profile');
+}
+
+    public function userProfile()
+{
+    return view('user.profile');
+}
+
 }

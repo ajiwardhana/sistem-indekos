@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penyewaan', function (Blueprint $table) {
+        Schema::create('penyewa', function (Blueprint $table) {
     $table->id();
     
     // Tambahkan kolom tanpa langsung membuat foreign key
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penyewaan');
+        Schema::dropIfExists('penyewa');
     }
 };

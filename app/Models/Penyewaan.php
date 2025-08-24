@@ -10,7 +10,7 @@ class Penyewaan extends Model
     use HasFactory;
 
     // Tentukan nama tabel secara eksplisit
-    protected $table = 'penyewaan';
+    protected $table = 'penyewa';
 
     protected $fillable = [
         'user_id',

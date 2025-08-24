@@ -26,28 +26,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($penyewaans as $index => $penyewaan)
+                        @foreach($penyewa as $index => $penyewa)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $penyewaan->kamar->nomor_kamar }} ({{ $penyewaan->kamar->tipe }})</td>
-                            <td>{{ $penyewaan->tanggal_mulai->format('d M Y') }}</td>
-                            <td>{{ $penyewaan->tanggal_selesai ? $penyewaan->tanggal_selesai->format('d M Y') : '-' }}</td>
-                            <td>Rp {{ number_format($penyewaan->total_pembayaran, 0, ',', '.') }}</td>
+                            <td>{{ $penyewa->kamar->nomor_kamar }} ({{ $penyewa->kamar->tipe }})</td>
+                            <td>{{ $penyewa->tanggal_mulai->format('d M Y') }}</td>
+                            <td>{{ $penyewa->tanggal_selesai ? $penyewa->tanggal_selesai->format('d M Y') : '-' }}</td>
+                            <td>Rp {{ number_format($penyewa->total_pembayaran, 0, ',', '.') }}</td>
                             <td>
                                 <span class="badge 
-                                    @if($penyewaan->status == 'aktif') badge-success
-                                    @elseif($penyewaan->status == 'selesai') badge-secondary
+                                    @if($penyewa->status == 'aktif') badge-success
+                                    @elseif($penyewa->status == 'selesai') badge-secondary
                                     @else badge-danger
                                     @endif">
-                                    {{ ucfirst($penyewaan->status) }}
+                                    {{ ucfirst($penyewa->status) }}
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('penyewaan.show', $penyewaan->id) }}" class="btn btn-sm btn-info">
+                                <a href="{{ route('penyewa.show', $penyewa->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                @if($penyewaan->status == 'aktif')
-                                    <a href="{{ route('penyewaan.edit', $penyewaan->id) }}" class="btn btn-sm btn-primary">
+                                @if($penyewa->status == 'aktif')
+                                    <a href="{{ route('penyewa.edit', $penyewa->id) }}" class="btn btn-sm btn-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 @endif
@@ -62,7 +62,7 @@
 
     @if(auth()->user()->isPelanggan())
         <div class="mt-3">
-            <a href="{{ route('penyewaan.create') }}" class="btn btn-primary">
+            <a href="{{ route('penyewa.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Buat Penyewaan Baru
             </a>
         </div>

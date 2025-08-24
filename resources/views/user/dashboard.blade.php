@@ -9,7 +9,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Dashboard User - Sistem Indekos')
+@section('title', 'Dashboard User - Sikosan')
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -113,7 +113,7 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-muted text-center py-4">Belum ada riwayat penyewaan</p>
+                        <p class="text-muted text-center py-4">Belum ada riwayat penyewa</p>
                     @endif
                 </div>
             </div>

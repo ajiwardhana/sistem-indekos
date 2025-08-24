@@ -11,4 +11,14 @@ class DashboardController extends Controller
     {
         return view('admin.dashboard');
     }
+
+    public function adminDashboard()
+{
+    $totalPenghuni = \App\Models\Penyewa::count();
+    $totalKamar = \App\Models\Kamar::count();
+    $kamarTersedia = \App\Models\Kamar::where('status', 'tersedia')->count();
+    $pembayaranPending = \App\Models\Pembayaran::where('status', 'pending')->count();
+
+    return view('admin.dashboard', compact('totalPenghuni', 'totalKamar', 'kamarTersedia', 'pembayaranPending'));
+}
 }

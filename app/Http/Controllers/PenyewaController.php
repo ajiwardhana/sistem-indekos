@@ -14,8 +14,8 @@ class PenyewaController extends Controller
      */
     public function index()
     {
-        $penyewas = Penyewa::with('kamar')->latest()->paginate(10);
-        return view('penyewa.index', compact('penyewas'));
+        $penyewa = Penyewa::with('kamar')->latest()->paginate(10);
+        return view('admin.penyewa.index', compact('penyewa'));
     }
 
     /**
@@ -34,7 +34,7 @@ class PenyewaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:penyewas',
+            'email' => 'required|email|unique:penyewa',
             'no_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'kamar_id' => 'required|exists:kamar,id',
@@ -84,7 +84,7 @@ class PenyewaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:penyewas,email,'.$penyewa->id,
+            'email' => 'required|email|unique:penyewa,email,'.$penyewa->id,
             'no_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'kamar_id' => 'required|exists:kamar,id',
@@ -138,7 +138,7 @@ class PenyewaController extends Controller
      */
     public function cetak()
     {
-        $penyewas = Penyewa::with('kamar')->latest()->get();
-        return view('penyewa.cetak', compact('penyewas'));
+        $penyewa = Penyewa::with('kamar')->latest()->get();
+        return view('penyewa.cetak', compact('penyewa'));
     }
 }

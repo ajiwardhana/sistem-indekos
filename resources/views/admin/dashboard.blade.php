@@ -1,4 +1,4 @@
-@php
+<!-- @php
     // Default values untuk semua variable yang mungkin digunakan
     $totalPendapatanBulanIni = $totalPendapatanBulanIni ?? 0;
     $pembayaranLunasCount = $pembayaranLunasCount ?? 0;
@@ -10,11 +10,11 @@
     $totalKostCount = $totalKostCount ?? 0;
     $monthlyStats = $monthlyStats ?? collect();
     $recentPayments = $recentPayments ?? collect();
-@endphp
+@endphp -->
 
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Sistem Indekos')
+@section('title', 'Dashboard - Sikosan')
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -144,7 +144,7 @@
                             @foreach($recentPayments as $payment)
                                 <div class="list-group-item">
                                     <div class="d-flex justify-content-between">
-                                        <h6 class="mb-1">{{ $payment->penyewaan->user->name ?? 'N/A' }}</h6>
+                                        <h6 class="mb-1">{{ $payment->penyewa->user->name ?? 'N/A' }}</h6>
                                         <small class="text-success">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</small>
                                     </div>
                                     <small class="text-muted">{{ $payment->created_at->format('d M Y') }}</small>

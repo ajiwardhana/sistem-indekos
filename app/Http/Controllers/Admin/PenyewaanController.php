@@ -14,13 +14,13 @@ class PenyewaanController extends Controller
      */
     public function index()
     {
-        // Untuk admin: tampilkan semua penyewaan
-        // Untuk pelanggan: tampilkan hanya penyewaan miliknya
-        $penyewaans = auth()->user()->isAdmin() 
+        // Untuk admin: tampilkan semua penyewa
+        // Untuk pelanggan: tampilkan hanya penyewa miliknya
+        $penyewa = auth()->user()->isAdmin() 
             ? Penyewaan::with(['user', 'kamar'])->latest()->get()
             : Penyewaan::where('user_id', auth()->id())->with('kamar')->latest()->get();
             
-        return view('penyewaan.index', compact('penyewaans'));
+        return view('penyewa.index', compact('penyewa'));
     }
 
     /**
@@ -29,7 +29,7 @@ class PenyewaanController extends Controller
     public function create()
     {
         $kamar = Kamar::where('status', 'tersedia')->get();
-        return view('penyewaan.create', compact('kamar'));
+        return view('penyewa.create', compact('kamar'));
     }
 
     /**
@@ -45,7 +45,7 @@ class PenyewaanController extends Controller
 
         $kamar = Kamar::findOrFail($validated['kamar_id']);
         
-        $penyewaan = Penyewaan::create([
+        $penyewa = Penyewaan::create([
             'user_id' => auth()->id(),
             'kamar_id' => $validated['kamar_id'],
             'tanggal_mulai' => $validated['tanggal_mulai'],
@@ -57,41 +57,41 @@ class PenyewaanController extends Controller
         // Update status kamar
         $kamar->update(['status' => 'terisi']);
 
-        return redirect()->route('penyewaan.show', $penyewaan->id)
+        return redirect()->route('penyewa.show', $penyewa->id)
             ->with('success', 'Penyewaan berhasil dibuat');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Penyewaan $penyewaan)
+    public function show(Penyewaan $penyewa)
     {
         // Authorization: pastikan user yang melihat adalah pemilik atau admin
-        $this->authorize('view', $penyewaan);
+        $this->authorize('view', $penyewa);
         
-        return view('penyewaan.show', compact('penyewaan'));
+        return view('penyewa.show', compact('penyewa'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Penyewaan $penyewaan)
+    public function edit(Penyewaan $penyewa)
     {
-        $this->authorize('update', $penyewaan);
+        $this->authorize('update', $penyewa);
         
         $kamar = Kamar::where('status', 'tersedia')
-            ->orWhere('id', $penyewaan->kamar_id)
+            ->orWhere('id', $penyewa->kamar_id)
             ->get();
             
-        return view('penyewaan.edit', compact('penyewaan', 'kamar'));
+        return view('penyewa.edit', compact('penyewa', 'kamar'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Penyewaan $penyewaan)
+    public function update(Request $request, Penyewaan $penyewa)
     {
-        $this->authorize('update', $penyewaan);
+        $this->authorize('update', $penyewa);
         
         $validated = $request->validate([
             'kamar_id' => 'required|exists:kamar,id',
@@ -100,25 +100,25 @@ class PenyewaanController extends Controller
             'status' => 'required|in:aktif,selesai,dibatalkan',
         ]);
 
-        $penyewaan->update($validated);
+        $penyewa->update($validated);
 
-        return redirect()->route('penyewaan.show', $penyewaan->id)
+        return redirect()->route('penyewa.show', $penyewa->id)
             ->with('success', 'Penyewaan berhasil diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Penyewaan $penyewaan)
+    public function destroy(Penyewaan $penyewa)
     {
-        $this->authorize('delete', $penyewaan);
+        $this->authorize('delete', $penyewa);
         
         // Kembalikan status kamar ke tersedia
-        $penyewaan->kamar->update(['status' => 'tersedia']);
+        $penyewa->kamar->update(['status' => 'tersedia']);
         
-        $penyewaan->delete();
+        $penyewa->delete();
 
-        return redirect()->route('penyewaan.index')
+        return redirect()->route('penyewa.index')
             ->with('success', 'Penyewaan berhasil dihapus');
     }
 }

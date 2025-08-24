@@ -10,26 +10,26 @@
                 <div class="col-md-6">
                     <h5>Informasi Kamar</h5>
                     <hr>
-                    <p><strong>Nomor Kamar:</strong> {{ $penyewaan->kamar->nomor_kamar }}</p>
-                    <p><strong>Tipe Kamar:</strong> {{ $penyewaan->kamar->tipe }}</p>
-                    <p><strong>Harga per Bulan:</strong> Rp {{ number_format($penyewaan->kamar->harga, 0, ',', '.') }}</p>
-                    <p><strong>Fasilitas:</strong> {{ $penyewaan->kamar->fasilitas }}</p>
+                    <p><strong>Nomor Kamar:</strong> {{ $penyewa->kamar->nomor_kamar }}</p>
+                    <p><strong>Tipe Kamar:</strong> {{ $penyewa->kamar->tipe }}</p>
+                    <p><strong>Harga per Bulan:</strong> Rp {{ number_format($penyewa->kamar->harga, 0, ',', '.') }}</p>
+                    <p><strong>Fasilitas:</strong> {{ $penyewa->kamar->fasilitas }}</p>
                 </div>
                 <div class="col-md-6">
                     <h5>Detail Penyewaan</h5>
                     <hr>
-                    <p><strong>Penyewa:</strong> {{ $penyewaan->user->name }}</p>
-                    <p><strong>Tanggal Mulai:</strong> {{ $penyewaan->tanggal_mulai->format('d M Y') }}</p>
-                    <p><strong>Tanggal Selesai:</strong> {{ $penyewaan->tanggal_selesai ? $penyewaan->tanggal_selesai->format('d M Y') : '-' }}</p>
-                    <p><strong>Durasi:</strong> {{ $penyewaan->tanggal_mulai->diffInMonths($penyewaan->tanggal_selesai) }} bulan</p>
-                    <p><strong>Total Pembayaran:</strong> Rp {{ number_format($penyewaan->total_pembayaran, 0, ',', '.') }}</p>
+                    <p><strong>Penyewa:</strong> {{ $penyewa->user->name }}</p>
+                    <p><strong>Tanggal Mulai:</strong> {{ $penyewa->tanggal_mulai->format('d M Y') }}</p>
+                    <p><strong>Tanggal Selesai:</strong> {{ $penyewa->tanggal_selesai ? $penyewa->tanggal_selesai->format('d M Y') : '-' }}</p>
+                    <p><strong>Durasi:</strong> {{ $penyewa->tanggal_mulai->diffInMonths($penyewa->tanggal_selesai) }} bulan</p>
+                    <p><strong>Total Pembayaran:</strong> Rp {{ number_format($penyewa->total_pembayaran, 0, ',', '.') }}</p>
                     <p><strong>Status:</strong> 
                         <span class="badge 
-                            @if($penyewaan->status == 'aktif') badge-success
-                            @elseif($penyewaan->status == 'selesai') badge-secondary
+                            @if($penyewa->status == 'aktif') badge-success
+                            @elseif($penyewa->status == 'selesai') badge-secondary
                             @else badge-danger
                             @endif">
-                            {{ ucfirst($penyewaan->status) }}
+                            {{ ucfirst($penyewa->status) }}
                         </span>
                     </p>
                 </div>
@@ -38,23 +38,23 @@
     </div>
 
     <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('penyewaan.index') }}" class="btn btn-secondary">
+        <a href="{{ route('penyewa.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
         
-        @if($penyewaan->status == 'aktif')
+        @if($penyewa->status == 'aktif')
             <div>
-                <a href="{{ route('penyewaan.edit', $penyewaan->id) }}" class="btn btn-primary">
+                <a href="{{ route('penyewa.edit', $penyewa->id) }}" class="btn btn-primary">
                     <i class="fas fa-edit"></i> Edit
                 </a>
-                <a href="{{ route('pembayaran.create') }}?penyewaan_id={{ $penyewaan->id }}" class="btn btn-success">
+                <a href="{{ route('pembayaran.create') }}?penyewa_id={{ $penyewa->id }}" class="btn btn-success">
                     <i class="fas fa-money-bill-wave"></i> Buat Pembayaran
                 </a>
             </div>
         @endif
     </div>
 
-    @if($penyewaan->pembayarans->count() > 0)
+    @if($penyewa->pembayarans->count() > 0)
         <div class="card shadow-sm">
             <div class="card-header">
                 <h5 class="mb-0">Riwayat Pembayaran</h5>
@@ -72,7 +72,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($penyewaan->pembayarans as $pembayaran)
+                            @foreach($penyewa->pembayarans as $pembayaran)
                             <tr>
                                 <td>{{ $pembayaran->tanggal_pembayaran->format('d M Y') }}</td>
                                 <td>Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>

@@ -13,7 +13,7 @@ class Pembayaran extends Model
     protected $table = 'pembayaran';
 
     protected $fillable = [
-        'penyewaan_id',
+        'penyewa_id',
         'jumlah',
         'tanggal_pembayaran',
         'status',
@@ -29,7 +29,7 @@ class Pembayaran extends Model
     /**
      * Relationship ke model Penyewaan
      */
-    public function penyewaan()
+    public function penyewa()
     {
         return $this->belongsTo(Penyewaan::class);
     }

@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function penyewaan()
+    public function penyewa()
 {
     return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
 }

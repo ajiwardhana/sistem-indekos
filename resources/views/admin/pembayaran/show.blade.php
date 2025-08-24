@@ -11,10 +11,10 @@
                 <div class="col-md-6">
                     <dl class="row">
                         <dt class="col-sm-4">ID Penyewaan</dt>
-                        <dd class="col-sm-8">{{ $pembayaran->penyewaan_id }}</dd>
+                        <dd class="col-sm-8">{{ $pembayaran->penyewa_id }}</dd>
 
                         <dt class="col-sm-4">Penyewa</dt>
-                        <dd class="col-sm-8">{{ $pembayaran->penyewaan->user->name ?? '-' }}</dd>
+                        <dd class="col-sm-8">{{ $pembayaran->penyewa->user->name ?? '-' }}</dd>
 
                         <dt class="col-sm-4">Jumlah</dt>
                         <dd class="col-sm-8">Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</dd>

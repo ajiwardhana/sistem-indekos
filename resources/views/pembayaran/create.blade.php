@@ -18,7 +18,7 @@
                             <select class="form-control @error('penyewa_id') is-invalid @enderror" 
                                     id="penyewa_id" name="penyewa_id" required>
                                 <option value="">Pilih Penyewa</option>
-                                @foreach($penyewas as $penyewa)
+                                @foreach($penyewa as $penyewa)
                                 <option value="{{ $penyewa->id }}" @selected(old('penyewa_id') == $penyewa->id)>
                                     {{ $penyewa->nama }} - Kamar {{ $penyewa->kamar->nomor_kamar }}
                                 </option>
