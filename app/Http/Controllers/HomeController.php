@@ -13,11 +13,11 @@ class HomeController extends Controller
     public function dashboard()
 {
     // Optimasi query dengan membatasi field dan menggunakan cache
-    $penyewaAktif = cache()->remember('penyewa_aktif_'.auth()->id(), 3600, function() {
-        return auth()->user()->penyewa()
+    $penyewaanAktif = cache()->remember('penyewaan_aktif_'.auth()->id(), 3600, function() {
+        return auth()->user()->penyewaan()
             ->with([
                 'kamar:id,nomor_kamar', 
-                'pembayaran' => fn($q) => $q->select('id','penyewa_id','jumlah','tanggal')
+                'pembayaran' => fn($q) => $q->select('id','penyewaan_id','jumlah','tanggal')
                     ->latest()
                     ->take(10) // Batasi riwayat yang diambil
             ])
@@ -25,17 +25,17 @@ class HomeController extends Controller
             ->first(['id', 'kamar_id', 'tanggal_mulai', 'status']);
     });
 
-    // Fallback jika tidak ada penyewa aktif
-    if(!$penyewaAktif) {
+    // Fallback jika tidak ada penyewaan aktif
+    if(!$penyewaanAktif) {
         return view('user.dashboard', [
-            'penyewaAktif' => null,
+            'penyewaanAktif' => null,
             'riwayatPembayaran' => collect()
         ]);
     }
 
     return view('user.dashboard', [
-        'penyewaAktif' => $penyewaAktif,
-        'riwayatPembayaran' => $penyewaAktif->pembayaran
+        'penyewaanAktif' => $penyewaanAktif,
+        'riwayatPembayaran' => $penyewaanAktif->pembayaran
     ]);
 }
 }

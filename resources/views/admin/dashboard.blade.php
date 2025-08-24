@@ -144,7 +144,7 @@
                             @foreach($recentPayments as $payment)
                                 <div class="list-group-item">
                                     <div class="d-flex justify-content-between">
-                                        <h6 class="mb-1">{{ $payment->penyewa->user->name ?? 'N/A' }}</h6>
+                                        <h6 class="mb-1">{{ $payment->penyewaan->user->name ?? 'N/A' }}</h6>
                                         <small class="text-success">Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</small>
                                     </div>
                                     <small class="text-muted">{{ $payment->created_at->format('d M Y') }}</small>

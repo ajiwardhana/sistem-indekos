@@ -12,12 +12,13 @@ class Kamar extends Model
     protected $table = 'kamar';
 
     protected $fillable = [
-        'nomor_kamar',
-        'tipe',
+        'nama_kamar',
+        'deskripsi',
         'harga',
-        'status',
-        'fasilitas',
-        'foto'
+        'luas',
+        'kapasitas',
+        'foto',
+        'status'
     ];
 
     protected $casts = [
@@ -27,7 +28,7 @@ class Kamar extends Model
     /**
      * Relationship ke model Penyewaan
      */
-    public function penyewa()
+    public function penyewaan()
     {
         return $this->hasMany(Penyewaan::class);
     }

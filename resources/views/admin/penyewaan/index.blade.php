@@ -1,4 +1,4 @@
-{{-- resources/views/admin/penyewa/index.blade.php --}}
+{{-- resources/views/admin/penyewaan/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -10,7 +10,7 @@
             <i class="fas fa-plus me-2"></i>Tambah Penghuni
         </a>
         {{-- Atau gunakan URL langsung --}}
-        {{-- <a href="{{ url('/admin/penyewa/create') }}" class="btn btn-primary"> --}}
+        {{-- <a href="{{ url('/admin/penyewaan/create') }}" class="btn btn-primary"> --}}
         {{--     <i class="fas fa-plus me-2"></i>Tambah Penghuni --}}
         {{-- </a> --}}
     </div>
@@ -23,7 +23,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <h6 class="text-muted mb-1">Total Penghuni</h6>
-                            <h4 class="mb-0">{{ $penyewa->total() }}</h4>
+                            <h4 class="mb-0">{{ $penyewaan->total() }}</h4>
                         </div>
                         <div class="flex-shrink-0">
                             <i class="fas fa-users fa-2x text-primary"></i>
@@ -38,7 +38,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <h6 class="text-muted mb-1">Aktif</h6>
-                            <h4 class="mb-0">{{ $penyewa->where('status', 'aktif')->count() }}</h4>
+                            <h4 class="mb-0">{{ $penyewaan->where('status', 'aktif')->count() }}</h4>
                         </div>
                         <div class="flex-shrink-0">
                             <i class="fas fa-user-check fa-2x text-success"></i>
@@ -53,7 +53,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <h6 class="text-muted mb-1">Non-Aktif</h6>
-                            <h4 class="mb-0">{{ $penyewa->where('status', 'nonaktif')->count() }}</h4>
+                            <h4 class="mb-0">{{ $penyewaan->where('status', 'nonaktif')->count() }}</h4>
                         </div>
                         <div class="flex-shrink-0">
                             <i class="fas fa-user-times fa-2x text-danger"></i>
@@ -68,7 +68,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                             <h6 class="text-muted mb-1">Kamar Terisi</h6>
-                            <h4 class="mb-0">{{ $penyewa->where('status', 'aktif')->count() }}/{{ App\Models\Kamar::count() }}</h4>
+                            <h4 class="mb-0">{{ $penyewaan->where('status', 'aktif')->count() }}/{{ App\Models\Kamar::count() }}</h4>
                         </div>
                         <div class="flex-shrink-0">
                             <i class="fas fa-bed fa-2x text-info"></i>
@@ -116,22 +116,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($penyewa as $penyewa)
+                        @foreach($penyewaan as $penyewaan)
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($penyewa->nama) }}&background=random" class="rounded-circle me-2" width="35" height="35">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($penyewaan->nama) }}&background=random" class="rounded-circle me-2" width="35" height="35">
                                     <div>
-                                        <div>{{ $penyewa->nama }}</div>
-                                        <small class="text-muted">{{ $penyewa->email }}</small>
+                                        <div>{{ $penyewaan->nama }}</div>
+                                        <small class="text-muted">{{ $penyewaan->email }}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ $penyewa->kamar->nama_kamar ?? 'Tidak ada kamar' }}</td>
-                            <td>{{ $penyewa->no_telepon }}</td>
-                            <td>{{ \Carbon\Carbon::parse($penyewa->tanggal_masuk)->format('d M Y') }}</td>
+                            <td>{{ $penyewaan->kamar->nama_kamar ?? 'Tidak ada kamar' }}</td>
+                            <td>{{ $penyewaan->no_telepon }}</td>
+                            <td>{{ \Carbon\Carbon::parse($penyewaan->tanggal_masuk)->format('d M Y') }}</td>
                             <td>
-                                <span class="status-badge badge-{{ $penyewa->status }}">{{ $penyewa->status }}</span>
+                                <span class="status-badge badge-{{ $penyewaan->status }}">{{ $penyewaan->status }}</span>
                             </td>
                             <td>
                                 <div class="btn-group">
@@ -147,13 +147,13 @@
                                     </button>
                                     
                                     {{-- Atau gunakan URL langsung --}}
-                                    {{-- <a href="{{ url('/penyewa/' . $penyewa->id) }}" class="btn btn-sm btn-info"> --}}
+                                    {{-- <a href="{{ url('/penyewaan/' . $penyewaan->id) }}" class="btn btn-sm btn-info"> --}}
                                     {{--     <i class="fas fa-eye"></i> --}}
                                     {{-- </a> --}}
-                                    {{-- <a href="{{ url('/penyewa/' . $penyewa->id . '/edit') }}" class="btn btn-sm btn-warning"> --}}
+                                    {{-- <a href="{{ url('/penyewaan/' . $penyewaan->id . '/edit') }}" class="btn btn-sm btn-warning"> --}}
                                     {{--     <i class="fas fa-edit"></i> --}}
                                     {{-- </a> --}}
-                                    {{-- <form action="{{ url('/penyewa/' . $penyewa->id) }}" method="POST" class="d-inline"> --}}
+                                    {{-- <form action="{{ url('/penyewaan/' . $penyewaan->id) }}" method="POST" class="d-inline"> --}}
                                     {{--     @csrf --}}
                                     {{--     @method('DELETE') --}}
                                     {{--     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus penghuni ini?')"> --}}
@@ -170,7 +170,7 @@
 
             <!-- Pagination -->
             <div class="d-flex justify-content-center mt-4">
-                {{ $penyewa->links() }}
+                {{ $penyewaan->links() }}
             </div>
         </div>
     </div>

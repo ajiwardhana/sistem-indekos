@@ -17,11 +17,11 @@ class PembayaranController extends Controller
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            $pembayaran = Pembayaran::with('penyewa.user')
+            $pembayaran = Pembayaran::with('penyewaan.user')
                 ->latest()
                 ->get();
         } else {
-            $pembayaran = Pembayaran::whereHas('penyewa', function($query) use ($user) {
+            $pembayaran = Pembayaran::whereHas('penyewaan', function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
                 ->latest()
@@ -73,4 +73,14 @@ class PembayaranController extends Controller
         $pembayaran->update(['status' => 'ditolak']);
         return redirect()->back()->with('success', 'Pembayaran ditolak');
     }
+
+    public function userIndex()
+{
+    // Dapatkan pembayaran melalui relasi penyewaan yang dimiliki user
+    $pembayaran = Pembayaran::whereHas('penyewaan', function($query) {
+        $query->where('user_id', Auth::id());
+    })->get();
+    
+    return view('user.pembayaran.index', compact('pembayaran'));
+}
 }

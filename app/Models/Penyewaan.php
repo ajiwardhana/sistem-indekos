@@ -9,8 +9,8 @@ class Penyewaan extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel secara eksplisit
-    protected $table = 'penyewa';
+    // Tentukan nama tabel yang benar
+    protected $table = 'penyewaan';
 
     protected $fillable = [
         'user_id',
@@ -18,15 +18,11 @@ class Penyewaan extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'status'
-    ];
-
-    protected $casts = [
-        'tanggal_mulai' => 'date',
-        'tanggal_selesai' => 'date'
+        // tambahkan kolom lain sesuai kebutuhan
     ];
 
     /**
-     * Relationship ke model User
+     * Relasi ke model User
      */
     public function user()
     {
@@ -34,18 +30,18 @@ class Penyewaan extends Model
     }
 
     /**
-     * Relationship ke model Kamar
-     */
-    public function kamar()
-    {
-        return $this->belongsTo(Kamar::class);
-    }
-
-    /**
-     * Relationship ke model Pembayaran
+     * Relasi ke model Pembayaran
      */
     public function pembayaran()
     {
         return $this->hasMany(Pembayaran::class);
+    }
+
+    /**
+     * Relasi ke model Kamar
+     */
+    public function kamar()
+    {
+        return $this->belongsTo(Kamar::class);
     }
 }

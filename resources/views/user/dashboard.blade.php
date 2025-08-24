@@ -113,7 +113,7 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-muted text-center py-4">Belum ada riwayat penyewa</p>
+                        <p class="text-muted text-center py-4">Belum ada riwayat penyewaan</p>
                     @endif
                 </div>
             </div>

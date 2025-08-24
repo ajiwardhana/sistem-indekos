@@ -6,7 +6,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form action="{{ route('penyewa.store') }}" method="POST">
+            <form action="{{ route('penyewaan.store') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
@@ -60,7 +60,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
                 </button>
-                <a href="{{ route('penyewa.index') }}" class="btn btn-secondary">
+                <a href="{{ route('penyewaan.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Kembali
                 </a>
             </form>

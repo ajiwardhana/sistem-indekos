@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Penyewa</th>
+                            <th>penyewaan</th>
                             <th>Jumlah</th>
                             <th>Tanggal</th>
                             <th>Status</th>
@@ -29,7 +29,7 @@
                         @forelse($pembayaran as $payment)
                         <tr>
                             <td>{{ $payment->id }}</td>
-                            <td>{{ $payment->penyewa->user->name ?? 'N/A' }}</td>
+                            <td>{{ $payment->penyewaan->user->name ?? 'N/A' }}</td>
                             <td>Rp {{ number_format($payment->jumlah, 0, ',', '.') }}</td>
                             <td>{{ $payment->tanggal_pembayaran->format('d M Y') }}</td>
                             <td>

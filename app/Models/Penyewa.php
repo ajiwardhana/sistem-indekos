@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Penyewa extends Model
+class penyewaan extends Model
 {
-    protected $table = 'penyewa';
+    protected $table = 'penyewaan';
     public function pembayaran()
 {
     return $this->hasMany(Pembayaran::class);

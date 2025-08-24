@@ -53,9 +53,16 @@ class KamarController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show(Kamar $kamar)
     {
-        return view('admin.kamar.show', compact('kamar'));
+        // Cek apakah kamar tersedia
+        if ($kamar->status !== 'tersedia') {
+            return redirect()->route('user.kamar.index')
+                ->with('error', 'Kamar tidak tersedia untuk disewa.');
+        }
+        
+        return view('user.kamar.show', compact('kamar'));
     }
 
     /**
@@ -94,4 +101,7 @@ class KamarController extends Controller
         return redirect()->route('admin.kamar.index')
             ->with('success', 'Kamar berhasil dihapus');
     }
+
+
+
 }

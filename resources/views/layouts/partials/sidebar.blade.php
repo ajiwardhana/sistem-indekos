@@ -13,6 +13,9 @@
                     Dashboard
                 </a>
             </li>
+            
+            {{-- Hanya tampilkan menu admin untuk user dengan role admin --}}
+            @if(auth()->check() && auth()->user()->role === 'admin')
             <li>
                 <a href="{{ route('admin.kamar.index') }}" class="nav-link {{ request()->is('admin/kamar*') ? 'active' : '' }}">
                     <i class="bi bi-door-closed"></i>
@@ -20,7 +23,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.penyewa.index') }}" class="nav-link {{ request()->is('admin/penyewa*') ? 'active' : '' }}">
+                <a href="{{ route('admin.penyewaan.index') }}" class="nav-link {{ request()->is('admin/penyewaan*') ? 'active' : '' }}">
                     <i class="bi bi-people"></i>
                     Manajemen Penghuni
                 </a>
@@ -32,11 +35,32 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link {{ request()->is('admin/keluhan*') ? 'active' : '' }}">
+                <a href="{{ route('admin.keluhan.index') }}" class="nav-link {{ request()->is('admin/keluhan*') ? 'active' : '' }}">
                     <i class="bi bi-chat-left-text"></i>
                     Keluhan
                 </a>
             </li>
+            @else
+           {{-- Menu untuk pengguna biasa --}}
+<li>
+    <a href="{{ route('user.kamar.index') }}" class="nav-link {{ request()->is('user/kamar*') ? 'active' : '' }}">
+        <i class="fas fa-door-open me-2"></i>
+        Kamar Tersedia
+    </a>
+</li>
+<li>
+    <a href="{{ route('user.pembayaran.index') }}" class="nav-link {{ request()->is('user/pembayaran*') ? 'active' : '' }}">
+        <i class="fas fa-money-bill-wave me-2"></i>
+        Pembayaran Saya
+    </a>
+</li>
+<li>
+    <a href="{{ route('user.keluhan.index') }}" class="nav-link {{ request()->is('user/keluhan*') ? 'active' : '' }}">
+        <i class="fas fa-comment me-2"></i>
+        Ajukan Keluhan
+    </a>
+</li>
+@endif
         </ul>
         <hr class="text-light">
         <div class="dropdown">

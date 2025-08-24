@@ -20,7 +20,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.penyewa.index') }}" class="nav-link {{ request()->is('admin/penyewa*') ? 'active' : '' }}">
+                <a href="{{ route('admin.penyewaan.index') }}" class="nav-link {{ request()->is('admin/penyewaan*') ? 'active' : '' }}">
                     <i class="bi bi-people"></i>
                     Manajemen Penghuni
                 </a>

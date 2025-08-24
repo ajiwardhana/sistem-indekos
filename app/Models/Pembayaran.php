@@ -9,27 +9,22 @@ class Pembayaran extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel secara eksplisit
+    // Tentukan nama tabel yang benar
     protected $table = 'pembayaran';
 
     protected $fillable = [
-        'penyewa_id',
+        'penyewaanan_id',
         'jumlah',
         'tanggal_pembayaran',
-        'status',
+        'metode_pembayaran',
         'bukti_pembayaran',
-        'metode_pembayaran'
-    ];
-
-    protected $casts = [
-        'tanggal_pembayaran' => 'date',
-        'jumlah' => 'integer'
+        'status'
     ];
 
     /**
-     * Relationship ke model Penyewaan
+     * Relasi ke model Penyewaan
      */
-    public function penyewa()
+    public function penyewaan()
     {
         return $this->belongsTo(Penyewaan::class);
     }

@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
     public function adminDashboard()
 {
-    $totalPenghuni = \App\Models\Penyewa::count();
+    $totalPenghuni = \App\Models\penyewaan::count();
     $totalKamar = \App\Models\Kamar::count();
     $kamarTersedia = \App\Models\Kamar::where('status', 'tersedia')->count();
     $pembayaranPending = \App\Models\Pembayaran::where('status', 'pending')->count();

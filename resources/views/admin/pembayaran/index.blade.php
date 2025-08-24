@@ -17,7 +17,7 @@
                     <thead class="thead-light">
                         <tr>
                             <th>#</th>
-                            <th>Penyewa</th>
+                            <th>penyewaan</th>
                             <th>Jumlah</th>
                             <th>Tanggal Pembayaran</th>
                             <th>Metode</th>
@@ -26,10 +26,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($pembayarans as $pembayaran)
+                        @forelse ($pembayaran as $pembayaran)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $pembayaran->penyewa->user->name ?? '-' }}</td>
+                            <td>{{ $pembayaran->penyewaan->user->name ?? '-' }}</td>
                             <td>Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</td>
                             <td>{{ $pembayaran->tanggal_pembayaran->format('d/m/Y') }}</td>
                             <td>

@@ -11,8 +11,8 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'phone', 'address'
-    ];
+    'name', 'email', 'password', 'role'
+];
 
     protected $hidden = [
         'password', 'remember_token',
@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function penyewa()
+    public function penyewaan()
 {
     return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
 }
@@ -38,7 +38,7 @@ class User extends Authenticatable
      */
     public function isUser()
     {
-        return $this->role === 'user';
+        return $this->role === 'pengguna';
     }
 
     // Relasi jika diperlukan
@@ -50,4 +50,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pembayaran::class, 'user_id');
     }
+
+    
 }
