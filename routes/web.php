@@ -27,6 +27,8 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 // Route untuk Admin
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
+    Route::get('/kamar/{kamar}', [KamarController::class, 'show'])->name('kamar.show');
     Route::resource('kamar', KamarController::class);
     Route::resource('penyewaan', PenyewaanController::class);
     Route::resource('pembayaran', PembayaranController::class);

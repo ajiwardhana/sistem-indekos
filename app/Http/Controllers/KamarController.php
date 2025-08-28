@@ -12,16 +12,41 @@ class KamarController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $kamar = Kamar::latest()->paginate(10);
-    
-    // Hitung statistik
-    $totalKamar = Kamar::count();
-    $tersedia = Kamar::where('status', 'tersedia')->count();
-    $terisi = Kamar::where('status', 'terisi')->count();
-    $maintenance = Kamar::where('status', 'perbaikan')->count();
+    {
+    try {
+        $kamar = Kamar::where('status', 'tersedia')->get();
+        
+        // Pastikan $kamars adalah collection, bukan boolean
+        if ($kamar->isEmpty()) {
+            return view('user.kamar.index', compact('kamar'))
+                ->with('info', 'Tidak ada kamar tersedia saat ini.');
+        }
+        
+        return view('user.kamar.index', compact('kamar'));
+        
+    } catch (\Exception $e) {
+        return redirect()->route('user.dashboard')
+            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+}
 
-    return view('admin.kamar.index', compact('kamar', 'totalKamar', 'tersedia', 'terisi', 'maintenance'));
+public function show($id)
+{
+    try {
+        $kamar = Kamar::where('status', 'tersedia')->find($id);
+        
+        // Jika kamar tidak ditemukan atau tidak tersedia
+        if (!$kamar) {
+            return redirect()->route('user.kamar.index')
+                ->with('error', 'Kamar tidak tersedia atau tidak ditemukan.');
+        }
+        
+        return view('user.kamar.show', compact('kamar'));
+        
+    } catch (\Exception $e) {
+        return redirect()->route('user.kamar.index')
+            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
 }
 
     /**
@@ -54,16 +79,7 @@ class KamarController extends Controller
      * Display the specified resource.
      */
 
-    public function show(Kamar $kamar)
-    {
-        // Cek apakah kamar tersedia
-        if ($kamar->status !== 'tersedia') {
-            return redirect()->route('user.kamar.index')
-                ->with('error', 'Kamar tidak tersedia untuk disewa.');
-        }
-        
-        return view('user.kamar.show', compact('kamar'));
-    }
+
 
     /**
      * Show the form for editing the specified resource.

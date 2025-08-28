@@ -30,50 +30,59 @@ class PenyewaanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Kamar $kamar)
+    public function store(Request $request, $kamarId)
 {
-    // Validasi
-    $request->validate([
-        'tanggal_mulai' => 'required|date|after_or_equal:today',
-        'durasi' => 'required|integer|min:1'
-    ]);
-
-    // Cek apakah kamar masih tersedia
-    if ($kamar->status !== 'tersedia') {
-        return redirect()->back()
-            ->with('error', 'Maaf, kamar ini sudah tidak tersedia.');
-    }
-
-    // Cek apakah user sudah menyewa kamar lain yang aktif
-    $penyewaananAktif = Penyewaan::where('user_id', Auth::id())
-        ->whereIn('status', ['aktif', 'menunggu_pembayaran'])
-        ->exists();
-
-    if ($penyewaananAktif) {
-        return redirect()->back()
-            ->with('error', 'Anda sudah memiliki kamar yang aktif. Tidak bisa menyewa lebih dari satu kamar.');
-    }
-
     try {
+        // Validasi input
+        $request->validate([
+            'tanggal_mulai' => 'required|date|after_or_equal:today',
+            'durasi' => 'required|integer|min:1'
+        ]);
+
+        // Cari kamar berdasarkan ID
+        $kamar = Kamar::find($kamarId);
+        
+        // Jika kamar tidak ditemukan
+        if (!$kamar) {
+            return redirect()->back()
+                ->with('error', 'Kamar tidak ditemukan.');
+        }
+
+        // Cek ketersediaan kamar
+        if ($kamar->status !== 'tersedia') {
+            return redirect()->back()
+                ->with('error', 'Maaf, kamar ini sudah tidak tersedia.');
+        }
+
+        // Cek jika user sudah memiliki penyewaan aktif
+        $existingPenyewaan = Penyewaan::where('user_id', Auth::id())
+            ->whereIn('status', ['aktif', 'menunggu_pembayaran'])
+            ->exists();
+
+        if ($existingPenyewaan) {
+            return redirect()->back()
+                ->with('error', 'Anda sudah memiliki kamar yang aktif.');
+        }
+
         // Hitung tanggal selesai
-        $tanggal_mulai = $request->tanggal_mulai;
-        $tanggal_selesai = date('Y-m-d', strtotime($tanggal_mulai . ' + ' . $request->durasi . ' months'));
+        $tanggal_selesai = date('Y-m-d', strtotime($request->tanggal_mulai . ' + ' . $request->durasi . ' months'));
 
         // Buat penyewaan
         $penyewaan = Penyewaan::create([
             'user_id' => Auth::id(),
             'kamar_id' => $kamar->id,
-            'tanggal_mulai' => $tanggal_mulai,
+            'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $tanggal_selesai,
             'durasi' => $request->durasi,
+            'total_harga' => $kamar->harga * $request->durasi,
             'status' => 'menunggu_pembayaran'
         ]);
 
-        // Update status kamar menjadi dipesan
+        // Update status kamar
         $kamar->update(['status' => 'dipesan']);
 
         return redirect()->route('user.pembayaran.index')
-            ->with('success', 'Kamar berhasil dipesan! Silakan lakukan pembayaran dalam 24 jam.');
+            ->with('success', 'Kamar berhasil dipesan! Silakan lakukan pembayaran.');
 
     } catch (\Exception $e) {
         return redirect()->back()
