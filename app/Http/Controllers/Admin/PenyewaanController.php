@@ -121,4 +121,40 @@ class PenyewaanController extends Controller
         return redirect()->route('penyewaan.index')
             ->with('success', 'Penyewaan berhasil dihapus');
     }
+
+     public function sewa(Request $request, $kamar_id)
+    {
+        // Validasi data
+        $validated = $request->validate([
+            'tanggal_mulai' => 'required|date|after_or_equal:today',
+            'durasi' => 'required|integer|min:1|max:12',
+        ]);
+
+        // Cari kamar
+        $kamar = Kamar::findOrFail($kamar_id);
+
+        // Pastikan kamar tersedia
+        if ($kamar->status !== 'tersedia') {
+            return redirect()->back()->with('error', 'Kamar tidak tersedia untuk disewa.');
+        }
+
+        // Hitung total harga
+        $totalHarga = $kamar->harga * $validated['durasi'];
+
+        // Buat penyewaan
+        $penyewaan = Penyewaan::create([
+            'user_id' => Auth::id(),
+            'kamar_id' => $kamar->id,
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'durasi' => $validated['durasi'],
+            'total_harga' => $totalHarga,
+            'status' => 'menunggu_pembayaran',
+        ]);
+
+        // Update status kamar menjadi terisi
+        $kamar->update(['status' => 'terisi']);
+
+        return redirect()->route('user.penyewaan.index')
+            ->with('success', 'Kamar berhasil dipesan. Silakan lakukan pembayaran.');
+    }
 }

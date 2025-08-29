@@ -32,51 +32,46 @@
 
     <!-- Content Row -->
     <div class="row">
-        @isset($kamars)
-            @if($kamars->count() > 0)
-                @foreach($kamars as $kamar)
-                    @if($kamar && isset($kamar->id)) <!-- Pastikan kamar dan id ada -->
+        @isset($kamar)
+            @if($kamar->count() > 0)
+                @foreach($kamar as $item)
+                    @if($item && isset($item->id))
                     <div class="col-xl-4 col-md-6 mb-4">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="text-center mb-3">
-                                    <img src="{{ $kamar->foto ? asset('storage/' . $kamar->foto) : asset('img/default-room.jpg') }}" 
-                                         class="img-fluid rounded" alt="{{ $kamar->nama_kamar }}" 
+                                    <img src="{{ $item->foto ? asset('storage/' . $item->foto) : asset('img/default-room.jpg') }}" 
+                                         class="img-fluid rounded" alt="Kamar {{ $item->nomor_kamar }}" 
                                          style="height: 200px; width: 100%; object-fit: cover;">
                                 </div>
                                 
-                                <h5 class="card-title text-primary">{{ $kamar->nama_kamar ?? 'Nama Kamar' }}</h5>
+                                <h5 class="card-title text-primary">Kamar {{ $item->nomor_kamar }}</h5>
                                 
                                 <div class="mb-2">
-                                    <span class="text-gray-800 font-weight-bold">Rp {{ number_format($kamar->harga ?? 0, 0, ',', '.') }}/bulan</span>
+                                    <span class="text-gray-800 font-weight-bold">Rp {{ number_format($item->harga, 0, ',', '.') }}/bulan</span>
                                 </div>
                                 
                                 <div class="mb-2">
                                     <small class="text-muted">
-                                        <i class="fas fa-expand-arrows-alt"></i> {{ $kamar->luas ?? 0 }} m² | 
-                                        <i class="fas fa-user"></i> {{ $kamar->kapasitas ?? 0 }} orang
+                                        <i class="fas fa-door-open"></i> Tipe: {{ ucfirst($item->tipe) }}
                                     </small>
                                 </div>
                                 
                                 <div class="mb-2">
                                     <small class="text-muted">
-                                        <i class="fas fa-bed"></i> Fasilitas: {{ $kamar->fasilitas ?? 'Kasur, Lemari' }}
+                                        <i class="fas fa-bed"></i> Fasilitas: {{ $item->fasilitas ?? 'Kasur, Lemari' }}
                                     </small>
                                 </div>
                                 
                                 <div class="mb-2">
                                     <span class="badge badge-success">
-                                        <i class="fas fa-check-circle"></i> Tersedia
+                                        <i class="fas fa-check-circle"></i> {{ ucfirst($item->status) }}
                                     </span>
                                 </div>
                                 
-                                <p class="card-text text-muted small">
-                                    {{ Str::limit($kamar->deskripsi ?? 'Tidak ada deskripsi', 100) }}
-                                </p>
-                                
                                 <div class="mt-3">
                                     <button type="button" class="btn btn-primary btn-block" data-toggle="modal" 
-                                            data-target="#sewaModal{{ $kamar->id }}">
+                                            data-target="#sewaModal{{ $item->id }}">
                                         <i class="fas fa-check me-1"></i> Pesan Kamar
                                     </button>
                                 </div>
@@ -85,27 +80,28 @@
                     </div>
 
                     <!-- Modal Pesan Kamar -->
-                    <div class="modal fade" id="sewaModal{{ $kamar->id }}" tabindex="-1" role="dialog" 
-                         aria-labelledby="sewaModalLabel{{ $kamar->id }}" aria-hidden="true">
+                    <div class="modal fade" id="sewaModal{{ $item->id }}" tabindex="-1" role="dialog" 
+                         aria-labelledby="sewaModalLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="sewaModalLabel{{ $kamar->id }}">
-                                        <i class="fas fa-home me-1"></i> Pesan Kamar - {{ $kamar->nama_kamar }}
+                                    <h5 class="modal-title" id="sewaModalLabel{{ $item->id }}">
+                                        <i class="fas fa-home me-1"></i> Pesan Kamar - {{ $item->nomor_kamar }}
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form action="{{ route('user.kamar.sewa', $kamar->id) }}" method="POST">
+                                <form action="{{ route('user.kamar.sewa', $item->id) }}" method="POST">
                                     @csrf
                                     <div class="modal-body">
                                         <div class="alert alert-info">
                                             <h6 class="alert-heading">Detail Kamar</h6>
                                             <hr>
-                                            <p class="mb-1"><strong>Nama Kamar:</strong> {{ $kamar->nama_kamar }}</p>
-                                            <p class="mb-1"><strong>Harga per Bulan:</strong> Rp {{ number_format($kamar->harga, 0, ',', '.') }}</p>
-                                            <p class="mb-1"><strong>Fasilitas:</strong> {{ $kamar->fasilitas ?? 'Kasur, Lemari' }}</p>
+                                            <p class="mb-1"><strong>Nomor Kamar:</strong> {{ $item->nomor_kamar }}</p>
+                                            <p class="mb-1"><strong>Tipe:</strong> {{ ucfirst($item->tipe) }}</p>
+                                            <p class="mb-1"><strong>Harga per Bulan:</strong> Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                                            <p class="mb-1"><strong>Fasilitas:</strong> {{ $item->fasilitas ?? 'Kasur, Lemari' }}</p>
                                         </div>
 
                                         <div class="form-group">
@@ -116,7 +112,7 @@
                                         
                                         <div class="form-group">
                                             <label for="durasi"><i class="fas fa-clock me-1"></i> Durasi Sewa</label>
-                                            <select class="form-control" name="durasi" id="durasi{{ $kamar->id }}" required>
+                                            <select class="form-control" name="durasi" id="durasi{{ $item->id }}" required>
                                                 <option value="1">1 Bulan</option>
                                                 <option value="3">3 Bulan</option>
                                                 <option value="6">6 Bulan</option>
@@ -126,8 +122,8 @@
                                         
                                         <div class="alert alert-warning">
                                             <strong><i class="fas fa-money-bill-wave me-1"></i> Total Pembayaran: </strong>
-                                            <span id="total-pembayaran{{ $kamar->id }}">
-                                                Rp {{ number_format($kamar->harga, 0, ',', '.') }}
+                                            <span id="total-pembayaran{{ $item->id }}">
+                                                Rp {{ number_format($item->harga, 0, ',', '.') }}
                                             </span>
                                             <br>
                                             <small>*Harga sudah termasuk semua fasilitas</small>
@@ -178,14 +174,14 @@
 @section('scripts')
 <script>
     // Fungsi untuk menghitung total pembayaran
-    @isset($kamars)
-        @foreach($kamars as $kamar)
-            @if($kamar && isset($kamar->id))
-            document.getElementById('durasi{{ $kamar->id }}').addEventListener('change', function() {
-                const harga = {{ $kamar->harga ?? 0 }};
+    @isset($kamar)
+        @foreach($kamar as $item)
+            @if($item && isset($item->id))
+            document.getElementById('durasi{{ $item->id }}').addEventListener('change', function() {
+                const harga = {{ $item->harga }};
                 const durasi = parseInt(this.value);
                 const total = harga * durasi;
-                document.getElementById('total-pembayaran{{ $kamar->id }}').textContent = 
+                document.getElementById('total-pembayaran{{ $item->id }}').textContent = 
                     'Rp ' + total.toLocaleString('id-ID');
             });
             @endif

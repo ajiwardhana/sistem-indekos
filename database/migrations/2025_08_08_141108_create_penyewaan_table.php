@@ -9,33 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('penyewaan', function (Blueprint $table) {
-    $table->id();
-    
-    // Tambahkan kolom tanpa langsung membuat foreign key
-    $table->unsignedBigInteger('user_id');
-    $table->unsignedBigInteger('kamar_id');
-    
-    $table->date('tanggal_mulai');
-    $table->date('tanggal_selesai')->nullable();
-    $table->enum('status', ['aktif', 'selesai', 'batal'])->default('aktif');
-    $table->timestamps();
-    
-    // Tambahkan foreign key secara terpisah
-    $table->foreign('user_id')
-          ->references('id')
-          ->on('users')
-          ->onDelete('cascade');
-          
-    $table->foreign('kamar_id')
-          ->references('id')
-          ->on('kamar')
-          ->onDelete('cascade');
-});
-        
-    }
+    // database/migrations/xxxx_xx_xx_create_penyewaans_table.php
+public function up()
+{
+    Schema::create('penyewaan', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->foreignId('kamar_id')->constrained()->onDelete('cascade');
+        $table->date('tanggal_mulai');
+        $table->integer('durasi'); // dalam bulan
+        $table->decimal('total_harga', 15, 2);
+        $table->enum('status', ['menunggu_pembayaran', 'dibayar', 'dikonfirmasi', 'selesai'])->default('menunggu_pembayaran');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
