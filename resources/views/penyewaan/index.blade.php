@@ -43,7 +43,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('penyewaan.show', $penyewaan->id) }}" class="btn btn-sm btn-info">
+                                <a href="{{ route('user.penyewaan.show', $penyewaan->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 @if($penyewaan->status == 'aktif')
@@ -62,7 +62,7 @@
 
     @if(auth()->user()->ispenghuni())
         <div class="mt-3">
-            <a href="{{ route('penyewaan.create') }}" class="btn btn-primary">
+            <a href="{{ route('user.penyewaan.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Buat Penyewaan Baru
             </a>
         </div>

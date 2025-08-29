@@ -29,7 +29,7 @@ class PenyewaanController extends Controller
     public function create()
     {
         $kamar = Kamar::where('status', 'tersedia')->get();
-        return view('penyewaan.create', compact('kamar'));
+        return view('admin.penyewaan.create', compact('kamar'));
     }
 
     /**
@@ -57,7 +57,7 @@ class PenyewaanController extends Controller
         // Update status kamar
         $kamar->update(['status' => 'terisi']);
 
-        return redirect()->route('penyewaan.show', $penyewaan->id)
+        return redirect()->route('admin.penyewaan.show', $penyewaan->id)
             ->with('success', 'Penyewaan berhasil dibuat');
     }
 
@@ -69,7 +69,7 @@ class PenyewaanController extends Controller
         // Authorization: pastikan user yang melihat adalah pemilik atau admin
         $this->authorize('view', $penyewaan);
         
-        return view('penyewaan.show', compact('penyewaan'));
+        return view('admin.penyewaan.show', compact('penyewaan'));
     }
 
     /**
@@ -102,7 +102,7 @@ class PenyewaanController extends Controller
 
         $penyewaan->update($validated);
 
-        return redirect()->route('penyewaan.show', $penyewaan->id)
+        return redirect()->route('admin.penyewaan.show', $penyewaan->id)
             ->with('success', 'Penyewaan berhasil diperbarui');
     }
 

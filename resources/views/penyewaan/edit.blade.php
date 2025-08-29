@@ -70,7 +70,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan Perubahan
                 </button>
-                <a href="{{ route('penyewaan.show', $penyewaan->id) }}" class="btn btn-secondary">
+                <a href="{{ route('user.penyewaan.show', $penyewaan->id) }}" class="btn btn-secondary">
                     <i class="fas fa-times"></i> Batal
                 </a>
             </form>

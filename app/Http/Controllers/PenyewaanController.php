@@ -87,7 +87,7 @@ class PenyewaanController extends Controller
     public function create()
     {
         $kamar = Kamar::where('status', 'tersedia')->get();
-        return view('penyewaan.create', compact('kamar'));
+        return view('user.penyewaan.create', compact('kamar'));
     }
 
 
@@ -98,7 +98,7 @@ class PenyewaanController extends Controller
     public function show($id)
 {
     $penyewaan = Penyewaan::with(['user', 'kamar'])->findOrFail($id);
-    return view('penyewaan.show', compact('penyewaan'));
+    return view('user.penyewaan.show', compact('penyewaan'));
 }
 
     

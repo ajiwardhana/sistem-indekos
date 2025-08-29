@@ -27,6 +27,7 @@ protected $routeMiddleware = [
     'signed' => \App\Http\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    'session.unique' => \App\Http\Middleware\GenerateUniqueSession::class,
     'admin' => \App\Http\Middleware\AdminMiddleware::class, // PASTIKAN INI ADA
 ];
 }

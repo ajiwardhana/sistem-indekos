@@ -34,9 +34,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('kamar', AdminKamarController::class);
     Route::resource('penyewaan', PenyewaanController::class);
     Route::resource('pembayaran', PembayaranController::class);
+    Route::resource('penyewaan', App\Http\Controllers\Admin\PenyewaanController::class);
 
     
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
+    Route::get('/penghuni', [AdminController::class, 'manajemPenghunienPenghuni'])->name('penghuni');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('/keluhan', function () {
         return view('admin.keluhan.index');
@@ -62,7 +64,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
         Route::get('/', [PembayaranController::class, 'userIndex'])->name('index');
         
         Route::post('/store', [PembayaranController::class, 'store'])->name('store');
+        Route::resource('penyewaan', App\Http\Controllers\User\PenyewaanController::class);
+    Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class, 'userDashboard'])->name('dashboard');
     });
+    
     
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
