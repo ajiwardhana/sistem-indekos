@@ -29,15 +29,12 @@ class Penyewaan extends Model
      * Relationship ke User
      */
     public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+{
+    return $this->belongsTo(User::class);
+}
 
-    /**
-     * Relationship ke Kamar
-     */
-    public function kamar()
-    {
-        return $this->belongsTo(Kamar::class);
-    }
+public function kamar()
+{
+    return $this->belongsTo(Kamar::class);
+}
 }

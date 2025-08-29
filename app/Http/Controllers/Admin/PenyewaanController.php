@@ -15,7 +15,7 @@ class PenyewaanController extends Controller
     public function index()
     {
         // Untuk admin: tampilkan semua penyewaan
-        // Untuk pelanggan: tampilkan hanya penyewaan miliknya
+        // Untuk penghuni: tampilkan hanya penyewaan miliknya
         $penyewaan = auth()->user()->isAdmin() 
             ? Penyewaan::with(['user', 'kamar'])->latest()->get()
             : Penyewaan::where('user_id', auth()->id())->with('kamar')->latest()->get();

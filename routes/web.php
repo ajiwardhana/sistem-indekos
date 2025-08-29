@@ -53,13 +53,14 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/kamar/{kamar}', [KamarController::class, 'show'])->name('kamar.show');
     
     // Penyewaan routes
+    Route::resource('penyewaan', PenyewaanController::class);
     Route::get('/penyewaan', [PenyewaanController::class, 'index'])->name('penyewaan.index');
     Route::post('/kamar/{id}/sewa', [PenyewaanController::class, 'sewa'])->name('kamar.sewa');
     
     // ✅ PERBAIKI: Tambahkan route pembayaran yang benar
     Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
         Route::get('/', [PembayaranController::class, 'userIndex'])->name('index');
-        Route::get('/create/{penyewaan}', [PembayaranController::class, 'create'])->name('create');
+        
         Route::post('/store', [PembayaranController::class, 'store'])->name('store');
     });
     

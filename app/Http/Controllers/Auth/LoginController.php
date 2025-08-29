@@ -30,13 +30,11 @@ class LoginController extends Controller
      * Redirect based on user role
      */
     public function redirectTo()
-    {
-        if (auth()->user()->isAdmin()) {
-            return '/dashboard'; // Tetap ke dashboard biasa, tapi kontennya beda
-            // atau jika ingin URL berbeda:
-            // return '/admin/dashboard';
-        }
-        
-        return '/dashboard';
+{
+    if (auth()->user()->isAdmin()) {
+        return '/admin/dashboard';
     }
+    
+    return '/user/dashboard';
+}
 }

@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    @if(auth()->user()->isPelanggan())
+    @if(auth()->user()->ispenghuni())
         <div class="mt-3">
             <a href="{{ route('penyewaan.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Buat Penyewaan Baru

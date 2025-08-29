@@ -15,8 +15,8 @@ class EnsureIsAdmin
      */
     public function handle($request, Closure $next)
 {
-    if (auth()->user()->role !== 'admin') {
-        abort(403, 'Akses ditolak');
+    if (!auth()->user()->isAdmin()) {
+        abort(403, 'Akses ditolak. Hanya administrator yang diizinkan.');
     }
 
     return $next($request);

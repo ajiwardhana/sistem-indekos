@@ -14,14 +14,14 @@ class PenyewaanController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $penyewaan = Penyewaan::with('kamar')
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return view('user.penyewaan.index', compact('penyewaan'));
-    }
+{
+    // Ganti all() dengan paginate()
+    $penyewaan = Penyewaan::with(['user', 'kamar'])
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(10);
+    
+    return view('penyewaan.index', compact('penyewaan'));
+}
 
     /**
      * Method untuk menyewa kamar (POST request dari modal)
@@ -95,15 +95,13 @@ class PenyewaanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Penyewaan $penyewaan)
-    {
-        // Pastikan user hanya bisa melihat penyewaannya sendiri
-        if ($penyewaan->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
-        
-        return view('user.penyewaan.show', compact('penyewaan'));
-    }
+    public function show($id)
+{
+    $penyewaan = Penyewaan::with(['user', 'kamar'])->findOrFail($id);
+    return view('penyewaan.show', compact('penyewaan'));
+}
+
+    
 
     /**
      * Show the form for editing the specified resource.

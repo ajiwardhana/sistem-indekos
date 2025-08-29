@@ -11,10 +11,10 @@ class AdminMiddleware
     // app/Http/Middleware/AdminMiddleware.php
 public function handle($request, Closure $next)
 {
-    if (auth()->check() && auth()->user()->role === 'admin') {
+    if (auth()->check() && auth()->user()->isAdmin()) {
         return $next($request);
     }
     
-    abort(403, 'Unauthorized access.');
+    abort(403, 'Akses hanya untuk administrator.');
 }
 }

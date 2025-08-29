@@ -11,8 +11,8 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-    'name', 'email', 'password', 'role'
-];
+        'name', 'email', 'password', 'role'
+    ];
 
     protected $hidden = [
         'password', 'remember_token',
@@ -22,34 +22,30 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function penyewaan()
-{
-    return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
-}
-
-
+    // Hanya 2 role: admin dan penghuni
     public function isAdmin()
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check if user is regular user
-     */
-    public function isUser()
+    public function isPenghuni()
     {
-        return $this->role === 'pengguna';
+        return $this->role === 'penghuni';
     }
 
-    // Relasi jika diperlukan
+    // Relasi
+    public function penyewaan()
+    {
+        return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
+    }
+
     public function kamar()
     {
         return $this->hasMany(Kamar::class, 'user_id');
     }
+
     public function pembayaran()
     {
         return $this->hasMany(Pembayaran::class, 'user_id');
     }
-
-    
 }
