@@ -53,8 +53,6 @@ class PenyewaanController extends Controller
                 return redirect()->back()
                     ->with('error', 'Anda sudah memiliki penyewaan aktif.');
             }
-            return redirect()->route('user.penyewaan.index') // ✅ Gunakan ini
-    ->with('success', 'Kamar berhasil dipesan! Silakan lakukan pembayaran.');
 
             // Hitung tanggal selesai dan total harga
             $tanggal_selesai = date('Y-m-d', strtotime($validated['tanggal_mulai'] . ' + ' . $validated['durasi'] . ' months'));

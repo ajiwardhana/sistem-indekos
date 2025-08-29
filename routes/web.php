@@ -6,6 +6,7 @@ use App\Http\Controllers\KamarController; // Untuk user
 use App\Http\Controllers\Admin\KamarController as AdminKamarController; // Untuk admin
 use App\Http\Controllers\PenyewaanController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\Admin\AdminController as AdminAdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -50,15 +51,20 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Kamar routes
     Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamar/{kamar}', [KamarController::class, 'show'])->name('kamar.show');
-    Route::get('/kamar-tersedia', [KamarController::class, 'kamarTersedia'])->name('kamar.tersedia');
     
-    // ✅ Penyewaan routes - PERBAIKI INI
+    // Penyewaan routes
     Route::get('/penyewaan', [PenyewaanController::class, 'index'])->name('penyewaan.index');
     Route::post('/kamar/{id}/sewa', [PenyewaanController::class, 'sewa'])->name('kamar.sewa');
     
-    // Route lainnya...
+    // ✅ PERBAIKI: Tambahkan route pembayaran yang benar
+    Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
+        Route::get('/', [PembayaranController::class, 'userIndex'])->name('index');
+        Route::get('/create/{penyewaan}', [PembayaranController::class, 'create'])->name('create');
+        Route::post('/store', [PembayaranController::class, 'store'])->name('store');
+    });
+    
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/pembayaran', [PembayaranController::class, 'userIndex'])->name('pembayaran.index');
+    
     Route::get('/keluhan', function () {
         return view('user.keluhan.index');
     })->name('keluhan.index');

@@ -76,11 +76,13 @@ class PembayaranController extends Controller
 
     public function userIndex()
 {
-    // Dapatkan pembayaran melalui relasi penyewaan yang dimiliki user
-    $pembayaran = Pembayaran::whereHas('penyewaan', function($query) {
-        $query->where('user_id', Auth::id());
-    })->get();
-    
-    return view('user.pembayaran.index', compact('pembayaran'));
+    // Ambil penyewaan user yang sedang login dan status menunggu_pembayaran
+    $penyewaan = Penyewaan::with('kamar')
+        ->where('user_id', Auth::id())
+        ->where('status', 'menunggu_pembayaran')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('user.pembayaran.index', compact('penyewaan'));
 }
 }
