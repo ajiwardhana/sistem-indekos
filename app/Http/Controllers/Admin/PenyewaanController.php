@@ -122,7 +122,7 @@ class PenyewaanController extends Controller
             ->with('success', 'Penyewaan berhasil dihapus');
     }
 
-     public function sewa(Request $request, $kamar_id)
+    public function sewa(Request $request, $kamar_id)
     {
         // Validasi data
         $validated = $request->validate([

@@ -28,6 +28,13 @@ class KamarController extends Controller
         }
     }
 
+    public function kamarTersedia()
+{
+    $kamar = Kamar::where('status', 'tersedia')->get();
+    
+    return view('user.kamar.tersedia', compact('kamar'));
+}
+
     /**
      * Display the specified resource for users.
      */

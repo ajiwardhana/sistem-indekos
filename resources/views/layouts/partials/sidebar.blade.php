@@ -48,6 +48,12 @@
         Kamar Tersedia
     </a>
 </li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('user.penyewaan.index') }}">
+        <i class="fas fa-list"></i>
+        <span>Penyewaan Saya</span>
+    </a>
+</li>
 <li>
     <a href="{{ route('user.pembayaran.index') }}" class="nav-link {{ request()->is('user/pembayaran*') ? 'active' : '' }}">
         <i class="fas fa-money-bill-wave me-2"></i>
