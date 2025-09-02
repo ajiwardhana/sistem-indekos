@@ -1,38 +1,47 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function dashboard()
+    public function __construct()
     {
-        $user_id = Auth::id();
-        
-        // Query untuk mendapatkan status kamar dan penyewaan terbaru
-        $rental = DB::table('penyewaan')
-            ->join('kamar', 'penyewaan.kamar_id', '=', 'kamar.id')
-            ->where('penyewaan.user_id', $user_id)
-            ->orderBy('penyewaan.id', 'desc')
-            ->first();
-        
-        // Query untuk mendapatkan pembayaran terbaru
-        $payments = DB::table('pembayaran')
-            ->where('user_id', $user_id)
-            ->orderBy('tanggal_bayar', 'desc')
-            ->limit(5)
-            ->get();
-        
-        // Query untuk mendapatkan riwayat penyewaan
-        $rental_history = DB::table('penyewaan')
-            ->join('kamar', 'penyewaan.kamar_id', '=', 'kamar.id')
-            ->where('penyewaan.user_id', $user_id)
-            ->orderBy('penyewaan.id', 'desc')
-            ->get();
-        
-        return view('user.dashboard', compact('rental', 'payments', 'rental_history'));
+        $this->middleware('admin');
+    }
+
+    public function index()
+    {
+        $users = User::all();
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:admin,pemilik,penyewa',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User berhasil dibuat');
     }
 }

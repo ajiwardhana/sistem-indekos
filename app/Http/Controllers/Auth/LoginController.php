@@ -4,37 +4,27 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Redirect based on user role
-     */
-    public function redirectTo()
-{
-    if (auth()->user()->isAdmin()) {
-        return '/admin/dashboard';
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'pemilik') {
+            return redirect()->route('pemilik.dashboard');
+        }
+        
+        return redirect()->route('penyewa.dashboard');
     }
-    
-    return '/user/dashboard';
-}
 }

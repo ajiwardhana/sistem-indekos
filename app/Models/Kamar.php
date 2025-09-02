@@ -9,39 +9,30 @@ class Kamar extends Model
 {
     use HasFactory;
 
-    protected $table = 'kamar';
+// app/Models/Penyewa.php
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
-    protected $fillable = [
-        'nomor_kamar',
-        'tipe',
-        'harga',
-        'fasilitas',
-        'foto',
-        'status'
-    ];
+public function kamar()
+{
+    return $this->belongsTo(Kamar::class);
+}
 
-    protected $casts = [
-        'harga' => 'integer'
-    ];
+// app/Models/User.php
+public function penyewa()
+{
+    return $this->hasOne(Penyewa::class);
+}
 
-    /**
-     * Relationship ke model Penyewaan
-     */
-    public function penyewaan()
-    {
-        return $this->hasMany(Penyewaan::class);
-    }
+public function isAdmin()
+{
+    return $this->role === 'admin';
+}
 
-    public function kamar()
-    {
-        return $this->belongsTo(kamar::class);
-    }
-
-    /**
-     * Get URL foto
-     */
-    public function getFotoUrlAttribute()
-    {
-        return $this->foto ? asset('storage/' . $this->foto) : null;
-    }
+public function isPenyewa()
+{
+    return $this->role === 'penyewa';
+}
 }

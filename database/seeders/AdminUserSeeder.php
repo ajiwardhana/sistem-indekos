@@ -3,23 +3,39 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AdminUserSeeder extends Seeder
 {
     public function run()
     {
-        User::create([
-            'name' => 'Admin Kos',
-            'email' => 'ajiwardhana001@gmail.com',
-            'password' => Hash::make('admin123'), // Ganti password
+        DB::table('users')->insert([
+            'name' => 'Administrator',
+            'email' => 'admin@indekos.com',
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
-            'email_verified_at' => now(),
-            'phone' => '081234567890',
-            'address' => 'Alamat admin'
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
-
-        $this->command->info('Admin user created successfully!');
+        
+        // Tambahkan user contoh lainnya jika perlu
+        DB::table('users')->insert([
+            'name' => 'Pemilik Kos Contoh',
+            'email' => 'pemilik@indekos.com',
+            'password' => Hash::make('pemilik123'),
+            'role' => 'pemilik',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        DB::table('users')->insert([
+            'name' => 'Penyewa Contoh',
+            'email' => 'penyewa@indekos.com',
+            'password' => Hash::make('penyewa123'),
+            'role' => 'penyewa',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

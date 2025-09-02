@@ -7,28 +7,37 @@ use App\Http\Controllers\Admin\KamarController as AdminKamarController; // Untuk
 use App\Http\Controllers\PenyewaanController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Admin\AdminController as AdminAdminController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Penyewa\PenyewaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-require __DIR__.'/auth.php';
+Route::get('/home', function () {
+    if (auth()->check()) {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif (auth()->user()->role === 'pemilik') {
+            return redirect()->route('pemilik.dashboard');
+        }
+    }
+    return redirect()->route('penyewa.dashboard');
+})->name('home');
 
-// Dashboard utama untuk semua user terautentikasi
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
 
 // Route Logout
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
 // Route untuk Admin
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+    
+    Route::resource('kamar', 'Admin\KamarController');
+    Route::resource('users', 'Admin\UserController');
     
     // GUNAKAN AdminKamarController untuk admin
     Route::resource('kamar', AdminKamarController::class);
@@ -46,32 +55,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 });
 
 // Route untuk User Biasa
-Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::prefix('penyewa')->name('penyewa.')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('penyewa.dashboard');
+    })->name('dashboard');
     
-    // Kamar routes
-    Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
-    Route::get('/kamar/{kamar}', [KamarController::class, 'show'])->name('kamar.show');
-    
-    // Penyewaan routes
-    Route::resource('penyewaan', PenyewaanController::class);
-    Route::get('/penyewaan', [PenyewaanController::class, 'index'])->name('penyewaan.index');
-    Route::post('/kamar/{id}/sewa', [PenyewaanController::class, 'sewa'])->name('kamar.sewa');
-    
-    // ✅ PERBAIKI: Tambahkan route pembayaran yang benar
-    Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
-        Route::get('/', [PembayaranController::class, 'userIndex'])->name('index');
-        
-        Route::post('/store', [PembayaranController::class, 'store'])->name('store');
-        Route::resource('penyewaan', App\Http\Controllers\User\PenyewaanController::class);
-    Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class, 'userDashboard'])->name('dashboard');
-    });
-    
-    
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    
-    Route::get('/keluhan', function () {
-        return view('user.keluhan.index');
-    })->name('keluhan.index');
+    Route::get('/kamars', 'Penyewa\KamarController@index')->name('kamar.index');
+    Route::get('/kamars/{kamar}/sewa', 'Penyewa\KamarController@sewa')->name('kamar.sewa');
+    Route::post('/kamars/{kamar}/sewa', 'Penyewa\KamarController@storeSewa')->name('kamar.store-sewa');
+});
+
+// Public routes
+Route::get('/', function () {
+    return view('welcome');
 });
