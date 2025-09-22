@@ -3,7 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\RoleMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -28,7 +28,7 @@ protected $routeMiddleware = [
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'session.unique' => \App\Http\Middleware\GenerateUniqueSession::class,
-    'admin' => \App\Http\Middleware\AdminMiddleware::class, // PASTIKAN INI ADA
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
 ];
 }
 
