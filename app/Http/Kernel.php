@@ -30,5 +30,6 @@ protected $routeMiddleware = [
     'session.unique' => \App\Http\Middleware\GenerateUniqueSession::class,
     'role' => \App\Http\Middleware\RoleMiddleware::class,
 ];
+
 }
 

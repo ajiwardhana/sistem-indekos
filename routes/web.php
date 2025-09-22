@@ -53,16 +53,14 @@ Route::get('/home', function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
-
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
     Route::resource('kamar', AdminKamarController::class);
     Route::resource('users', UserController::class);
-
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::get('/penghuni', [AdminController::class, 'manajemenPenghuni'])->name('penghuni');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-
-    // Placeholder untuk keluhan
     Route::get('/keluhan', fn() => view('admin.keluhan.index'))->name('keluhan.index');
 });
 
@@ -73,7 +71,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 */
 Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])->group(function () {
     Route::get('/dashboard', fn() => view('penyewa.dashboard'))->name('dashboard');
-
     Route::get('/kamars', [PenyewaKamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamars/{kamar}/sewa', [PenyewaKamarController::class, 'sewa'])->name('kamar.sewa');
     Route::post('/kamars/{kamar}/sewa', [PenyewaKamarController::class, 'storeSewa'])->name('kamar.store-sewa');
