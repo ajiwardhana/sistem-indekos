@@ -5,17 +5,20 @@
         {{-- Admin --}}
         @if(Auth::check() && Auth::user()->role === 'admin')
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.dashboard') }}">
+                <a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('admin.dashboard') }}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.kamars.index') }}">
+                <a class="nav-link text-white {{ request()->routeIs('admin.kamars.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('admin.kamars.index') }}">
                     <i class="bi bi-door-closed"></i> Kelola Kamar
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.users.index') }}">
+                <a class="nav-link text-white {{ request()->routeIs('admin.users.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('admin.users.index') }}">
                     <i class="bi bi-people"></i> Kelola Pengguna
                 </a>
             </li>
@@ -23,63 +26,68 @@
                 @php
                     $pending = \App\Models\Pembayaran::where('status','pending')->count();
                 @endphp
-                <a class="nav-link text-white" href="{{ route('admin.pembayarans.index') }}">
+                <a class="nav-link text-white {{ request()->routeIs('admin.pembayarans.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('admin.pembayarans.index') }}">
                     <i class="bi bi-wallet2"></i> Pembayaran
                     @if($pending > 0)
                         <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
                     @endif
                 </a>
             </li>
-
-
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.keluhan.index') }}">
+                <a class="nav-link text-white {{ request()->routeIs('admin.keluhan.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('admin.keluhan.index') }}">
                     <i class="bi bi-chat-left-dots"></i> Keluhan
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('profile.edit') }}">
+                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('profile.edit') }}">
                     <i class="bi bi-person-gear"></i> Pengaturan Profil
                 </a>
             </li>
         @endif
 
         {{-- Penyewa --}}
-@if(Auth::check() && Auth::user()->role === 'penyewa')
-    <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('penyewa.dashboard') }}">
-            <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('penyewa.kamar.index') }}">
-            <i class="bi bi-door-open"></i> Daftar Kamar
-        </a>
-    </li>
-    <li class="nav-item">
-        @php
-            $penyewa = \App\Models\Penyewa::where('user_id', Auth::id())->first();
-            $pending = $penyewa ? $penyewa->pembayarans()->where('status','pending')->count() : 0;
-        @endphp
-        <a class="nav-link text-white" href="{{ route('penyewa.pembayaran.index') }}">
-            <i class="bi bi-wallet2"></i> Pembayaran
-            @if($pending > 0)
-                <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
-            @endif
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('profile.edit') }}">
-            <i class="bi bi-person-gear"></i> Pengaturan Profil
-        </a>
-    </li>
-@endif
-
+        @if(Auth::check() && Auth::user()->role === 'penyewa')
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->routeIs('penyewa.dashboard') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('penyewa.dashboard') }}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->routeIs('penyewa.kamar.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('penyewa.kamar.index') }}">
+                    <i class="bi bi-door-open"></i> Daftar Kamar
+                </a>
+            </li>
+            <li class="nav-item">
+                @php
+                    $penyewa = \App\Models\Penyewa::where('user_id', Auth::id())->first();
+                    $pending = $penyewa ? $penyewa->pembayarans()->where('status','pending')->count() : 0;
+                @endphp
+                <a class="nav-link text-white {{ request()->routeIs('penyewa.pembayarans.*') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('penyewa.pembayarans.index') }}">
+                    <i class="bi bi-wallet2"></i> Pembayaran
+                    @if($pending > 0)
+                        <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
+                    @endif
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('profile.edit') }}">
+                    <i class="bi bi-person-gear"></i> Pengaturan Profil
+                </a>
+            </li>
+        @endif
 
         {{-- Pemilik --}}
         @if(Auth::check() && Auth::user()->role === 'pemilik')
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('pemilik.dashboard') }}">
+                <a class="nav-link text-white {{ request()->routeIs('pemilik.dashboard') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('pemilik.dashboard') }}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
@@ -94,12 +102,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('profile.edit') }}">
+                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
+                   href="{{ route('profile.edit') }}">
                     <i class="bi bi-person-gear"></i> Pengaturan Profil
                 </a>
             </li>
         @endif
-
     </ul>
 
     {{-- Logout --}}

@@ -23,7 +23,7 @@ class DashboardController extends Controller
     public function create()
     {
         $kosList = Kos::all();
-        return view('admin.kamar.create', compact('kosList'));
+        return view('admin.kamars.create', compact('kosList'));
     }
 
     public function store(Request $request)

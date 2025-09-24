@@ -58,8 +58,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+
+    Route::put('kamars/{id}/batalkan', [AdminKamarController::class, 'batalkan'])
+    ->name('kamars.batalkan');
+
     Route::resource('kamars', AdminKamarController::class);
     Route::resource('users', UserController::class);
+    Route::resource('admins', AdminController::class);
 
      // 🔥 Pembayaran
     Route::get('pembayarans', [AdminPembayaranController::class, 'index'])->name('pembayarans.index');
@@ -79,18 +84,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 |--------------------------------------------------------------------------
 */
 Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Penyewa\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Penyewa\DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    Route::get('/kamars', [PenyewaKamarController::class, 'index'])->name('kamar.index');
-    Route::get('/kamars/{kamar}/sewa', [PenyewaKamarController::class, 'sewa'])->name('kamar.sewa');
-    Route::post('/kamars/{kamar}/sewa', [PenyewaKamarController::class, 'storeSewa'])->name('kamar.store-sewa');
+    // Kamar
+    Route::get('/kamars', [App\Http\Controllers\Penyewa\KamarController::class, 'index'])
+        ->name('kamar.index');
+    Route::get('/kamars/{kamar}/sewa', [App\Http\Controllers\Penyewa\KamarController::class, 'sewa'])
+        ->name('kamars.sewa');
+    Route::post('/kamars/{kamar}/sewa', [App\Http\Controllers\Penyewa\KamarController::class, 'storeSewa'])
+        ->name('kamar.store-sewa');
     
     // Pembayaran
     Route::get('pembayarans', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'index'])
         ->name('pembayarans.index');
-    Route::post('pembayarans/{id}/bayar', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'bayar'])
-        ->name('pembayaran.bayar');
-    Route::post('/pembayaran/{pembayaran}/upload', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+
+    // 🔥 ini route tambahan supaya cocok sama controller kamu
+    Route::post('pembayarans/{id}/upload-bukti', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'uploadBukti'])
+        ->name('pembayarans.uploadBukti');
 });
 
 /*

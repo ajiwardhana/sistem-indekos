@@ -8,6 +8,13 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <!-- 🔥 Tambah Kamar -->
+    <div class="mb-3 text-end">
+        <a href="{{ route('admin.kamars.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Kamar
+        </a>
+    </div>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -40,7 +47,7 @@
                     @if($kamar->penyewa && $kamar->penyewa->user)
                         {{ $kamar->penyewa->user->name }} <br>
                         <small>{{ $kamar->penyewa->user->email }}</small>
-                    @else
+                    @elseif($kamar->status == 'tersedia')
                         <span class="text-muted">Belum ada penyewa</span>
                     @endif
                 </td>
@@ -48,6 +55,16 @@
                     <a href="{{ route('admin.kamars.show', $kamar->id) }}" class="btn btn-info btn-sm">
                         <i class="fas fa-eye"></i> Detail
                     </a>
+                    <a href="{{ route('admin.kamars.edit', $kamar->id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <form action="{{ route('admin.kamars.destroy', $kamar->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus kamar ini?')">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

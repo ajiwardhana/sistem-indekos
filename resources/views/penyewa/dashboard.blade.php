@@ -27,7 +27,7 @@
     @endphp
     @if($pending > 0)
         <div class="alert alert-warning">
-            Anda memiliki <strong>{{ $pending }}</strong> pembayaran pending. <a href="{{ route('penyewa.pembayaran.index') }}">Lihat Pembayaran</a>.
+            Anda memiliki <strong>{{ $pending }}</strong> pembayaran pending. <a href="{{ route('penyewa.pembayarans.index') }}">Lihat Pembayaran</a>.
         </div>
     @endif
 
@@ -52,7 +52,7 @@
             <a href="{{ route('penyewa.kamar.index') }}" class="list-group-item list-group-item-action">
                 <i class="fas fa-bed me-2"></i> Cari & Sewa Kamar
             </a>
-            <a href="{{ route('penyewa.pembayaran.index') }}" class="list-group-item list-group-item-action">
+            <a href="{{ route('penyewa.pembayarans.index') }}" class="list-group-item list-group-item-action">
                 <i class="fas fa-money-bill me-2"></i> Riwayat Pembayaran
             </a>
         </div>
