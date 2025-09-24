@@ -3,6 +3,10 @@
 @section('content')
 <div class="container">
     <h2>Dashboard Penyewa</h2>
+    <div class="alert alert-primary">
+        Halo, <strong>{{ Auth::user()->name }}</strong> 👋 <br>
+        Anda login sebagai <strong>Penyewa</strong>.
+    </div>
 
     {{-- Info Kamar --}}
     @if($penyewa && $penyewa->kamar)

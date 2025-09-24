@@ -87,7 +87,7 @@ Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])
     
     // Pembayaran
     Route::get('pembayarans', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'index'])
-        ->name('pembayaran.index');
+        ->name('pembayarans.index');
     Route::post('pembayarans/{id}/bayar', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'bayar'])
         ->name('pembayaran.bayar');
     Route::post('/pembayaran/{pembayaran}/upload', [\App\Http\Controllers\Penyewa\PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
@@ -100,4 +100,14 @@ Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])
 */
 Route::prefix('pemilik')->name('pemilik.')->middleware(['auth', 'role:pemilik'])->group(function () {
     Route::get('/dashboard', fn() => view('pemilik.dashboard'))->name('dashboard');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Routes Edit Profile (All Roles)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });

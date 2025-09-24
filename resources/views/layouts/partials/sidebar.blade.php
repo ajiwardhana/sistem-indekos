@@ -23,7 +23,7 @@
                 @php
                     $pending = \App\Models\Pembayaran::where('status','pending')->count();
                 @endphp
-                <a class="nav-link text-white" href="{{ route('admin.pembayaran.index') }}">
+                <a class="nav-link text-white" href="{{ route('admin.pembayarans.index') }}">
                     <i class="bi bi-wallet2"></i> Pembayaran
                     @if($pending > 0)
                         <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
@@ -38,8 +38,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.settings') }}">
-                    <i class="bi bi-gear"></i> Pengaturan
+                <a class="nav-link text-white" href="{{ route('profile.edit') }}">
+                    <i class="bi bi-person-gear"></i> Pengaturan Profil
                 </a>
             </li>
         @endif
@@ -68,6 +68,11 @@
             @endif
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{{ route('profile.edit') }}">
+            <i class="bi bi-person-gear"></i> Pengaturan Profil
+        </a>
+    </li>
 @endif
 
 
@@ -86,6 +91,11 @@
             <li class="nav-item">
                 <a class="nav-link text-white" href="#">
                     <i class="bi bi-cash"></i> Laporan Keuangan
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ route('profile.edit') }}">
+                    <i class="bi bi-person-gear"></i> Pengaturan Profil
                 </a>
             </li>
         @endif

@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.pembayaran.index') }}" class="nav-link {{ request()->is('admin/pembayaran*') ? 'active' : '' }}">
+                <a href="{{ route('admin.pembayarans.index') }}" class="nav-link {{ request()->is('admin/pembayaran*') ? 'active' : '' }}">
                     <i class="bi bi-cash-coin"></i>
                     Manajemen Pembayaran
                 </a>

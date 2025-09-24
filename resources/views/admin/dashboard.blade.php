@@ -5,9 +5,14 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Admin Dashboard</div>
+                <div class="card-header">
+                    Selamat datang, {{ Auth::user()->name }} 👋 (Admin)
+                </div>
 
                 <div class="card-body">
+                    <p class="text-muted">Anda login sebagai <strong>{{ Auth::user()->email }}</strong></p>
+                    <h5 class="mb-3">Halo, {{ Auth::user()->name }} (Admin)</h5>
+
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -58,7 +63,7 @@
                             <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">
                                 <i class="fas fa-users me-2"></i> Kelola User
                             </a>
-                            <a href="{{ route('admin.pembayaran.index') }}" class="list-group-item list-group-item-action">
+                            <a href="{{ route('admin.pembayarans.index') }}" class="list-group-item list-group-item-action">
                                 <i class="fas fa-money-bill me-2"></i> Pembayaran
                             </a>
                             <a href="{{ route('admin.keluhan.index') }}" class="list-group-item list-group-item-action">
