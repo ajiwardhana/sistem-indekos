@@ -3,38 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Models\Pembayaran;
 
 class PembayaranController extends Controller
 {
     public function index()
     {
-        $pembayarans = Pembayaran::with(['penyewa.user', 'kamar'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
+        $pembayarans = Pembayaran::orderBy('created_at', 'desc')->get();
         return view('admin.pembayarans.index', compact('pembayarans'));
     }
 
     public function konfirmasi($id)
     {
         $pembayaran = Pembayaran::findOrFail($id);
-        $pembayaran->status = 'lunas';
-        $pembayaran->tanggal_bayar = now();
-        $pembayaran->save();
+        $pembayaran->update(['status' => 'lunas']);
 
-        return redirect()->route('admin.pembayarans.index')
-            ->with('success', 'Pembayaran berhasil dikonfirmasi ✅');
+        return redirect()->route('admin.pembayarans.index')->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
 
     public function tolak($id)
     {
         $pembayaran = Pembayaran::findOrFail($id);
-        $pembayaran->status = 'ditolak';
-        $pembayaran->save();
+        $pembayaran->update(['status' => 'ditolak']);
 
-        return redirect()->route('admin.pembayarans.index')
-            ->with('error', 'Pembayaran ditolak ❌');
+        return redirect()->route('admin.pembayarans.index')->with('error', 'Pembayaran ditolak.');
     }
 }

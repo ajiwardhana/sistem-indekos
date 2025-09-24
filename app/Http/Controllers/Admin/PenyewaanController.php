@@ -1,4 +1,3 @@
-// app/Http/Controllers/Admin/PenyewaanController.php
 <?php
 
 namespace App\Http\Controllers\Admin;

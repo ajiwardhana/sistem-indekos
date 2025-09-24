@@ -12,28 +12,33 @@ class PembayaranController extends Controller
 {
     public function index()
     {
-        $penyewa = Penyewa::where('user_id', Auth::id())->first();
-        $pembayarans = Pembayaran::where('penyewa_id', $penyewa->id)
-            ->with('kamar')
+        $pembayarans = Pembayaran::where('penyewa_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
 
         return view('penyewa.pembayarans.index', compact('pembayarans'));
     }
 
-    public function bayar(Request $request, $id)
+    public function uploadBukti(Request $request, $id)
     {
-        $pembayaran = Pembayaran::findOrFail($id);
+        $request->validate([
+            'bukti' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-        if ($request->hasFile('bukti')) {
-            $path = $request->file('bukti')->store('bukti_pembayaran', 'public');
-            $pembayaran->bukti = $path;
-        }
+        $pembayaran = Pembayaran::where('id', $id)
+            ->where('penyewa_id', auth()->id())
+            ->firstOrFail();
 
-        $pembayaran->status = 'pending'; // menunggu admin cek
-        $pembayaran->save();
+        // Simpan file
+        $path = $request->file('bukti')->store('bukti_pembayaran', 'public');
 
-        return redirect()->route('penyewa.pembayaran.index')
-            ->with('success', 'Bukti pembayaran berhasil dikirim, menunggu konfirmasi admin.');
+        // Update pembayaran
+        $pembayaran->update([
+            'bukti' => $path,
+            'status' => 'pending', // default setelah upload
+        ]);
+
+        return redirect()->route('penyewa.pembayarans.index')
+            ->with('success', 'Bukti pembayaran berhasil diupload!');
     }
 }

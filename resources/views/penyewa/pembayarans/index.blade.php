@@ -2,29 +2,25 @@
 
 @section('content')
 <div class="container">
-    <h2>Riwayat Pembayaran</h2>
-
-    @if(session('status'))
-        <div class="alert alert-success">{{ session('status') }}</div>
-    @endif
+    <h2>Riwayat Pembayaran Saya</h2>
 
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
                 <th>#</th>
                 <th>Kamar</th>
-                <th>Harga</th>
+                <th>Jumlah</th>
                 <th>Status</th>
                 <th>Bukti</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($pembayarans as $p)
+            @forelse($pembayarans as $p)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $p->kamar->nomor_kamar }}</td>
-                    <td>Rp {{ number_format($p->jumlah,0,',','.') }}</td>
+                    <td>{{ $p->kamar->nomor_kamar ?? '-' }}</td>
+                    <td>Rp {{ number_format($p->jumlah, 0, ',', '.') }}</td>
                     <td>
                         @if($p->status == 'pending')
                             <span class="badge bg-warning">Pending</span>
@@ -42,18 +38,24 @@
                         @endif
                     </td>
                     <td>
-                        @if(!$p->bukti)
-                            <form action="{{ route('penyewa.pembayaran.upload', $p->id) }}" method="POST" enctype="multipart/form-data">
+                        @if($p->status == 'pending')
+                            <form action="{{ route('penyewa.pembayarans.uploadBukti', $p->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <input type="file" name="bukti" required>
-                                <button type="submit" class="btn btn-sm btn-primary mt-1">Upload</button>
+                                <div class="mb-2">
+                                    <input type="file" name="bukti" class="form-control form-control-sm" required>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">Upload Bukti</button>
                             </form>
                         @else
                             -
                         @endif
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center">Belum ada pembayaran</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

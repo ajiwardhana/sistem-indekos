@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,13 +63,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('penyewa', PenyewaController::class);
 
      // 🔥 Pembayaran
-    Route::get('/pembayaran', [App\Http\Controllers\Admin\PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::get('pembayarans', [\App\Http\Controllers\Admin\PembayaranController::class, 'index'])
-        ->name('pembayarans.index');
-    Route::post('pembayarans/{id}/konfirmasi', [\App\Http\Controllers\Admin\PembayaranController::class, 'konfirmasi'])
-        ->name('pembayarans.konfirmasi');
-    Route::post('pembayarans/{id}/tolak', [\App\Http\Controllers\Admin\PembayaranController::class, 'tolak'])
-        ->name('pembayarans.tolak');
+    Route::get('/admin/pembayarans', [AdminPembayaranController::class, 'index'])->name('admin.pembayarans.index');
+    Route::post('/admin/pembayarans/{id}/konfirmasi', [AdminPembayaranController::class, 'konfirmasi'])->name('admin.pembayarans.konfirmasi');
+    Route::post('/admin/pembayarans/{id}/tolak', [AdminPembayaranController::class, 'tolak'])->name('admin.pembayarans.tolak');
 
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::get('/penghuni', [AdminController::class, 'manajemenPenghuni'])->name('penghuni');

@@ -4,6 +4,13 @@
 <div class="container">
     <h2>Daftar Pembayaran</h2>
 
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
@@ -17,12 +24,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(\App\Models\Pembayaran::orderBy('created_at','desc')->get() as $p)
+            @foreach($pembayarans as $p)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $p->penyewa->user->name ?? '-' }}</td>
+                    <td>{{ $p->penyewa->name ?? '-' }}</td>
                     <td>{{ $p->kamar->nomor_kamar ?? '-' }}</td>
-                    <td>Rp {{ number_format($p->jumlah,0,',','.') }}</td>
+                    <td>Rp {{ number_format($p->jumlah, 0, ',', '.') }}</td>
                     <td>
                         @if($p->status == 'pending')
                             <span class="badge bg-warning">Pending</span>
@@ -34,19 +41,23 @@
                     </td>
                     <td>
                         @if($p->bukti)
-                            <a href="{{ asset('storage/' . $p->bukti) }}" target="_blank">Lihat</a>
+                            <a href="{{ asset('storage/' . $p->bukti) }}" target="_blank" class="btn btn-sm btn-primary">Lihat</a>
                         @else
-                            -
+                            <span class="text-muted">Belum Upload</span>
                         @endif
                     </td>
                     <td>
                         @if($p->status == 'pending')
-                            <form action="{{ route('admin.pembayaran.konfirmasi', $p->id) }}" method="POST">
+                            <form action="{{ route('admin.pembayarans.konfirmasi', $p->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-success">Konfirmasi</button>
                             </form>
+                            <form action="{{ route('admin.pembayarans.tolak', $p->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
+                            </form>
                         @else
-                            -
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                 </tr>
