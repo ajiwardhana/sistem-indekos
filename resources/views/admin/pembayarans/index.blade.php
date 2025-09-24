@@ -2,28 +2,26 @@
 
 @section('content')
 <div class="container">
-    <h2>Riwayat Pembayaran</h2>
-
-    @if(session('status'))
-        <div class="alert alert-success">{{ session('status') }}</div>
-    @endif
+    <h2>Daftar Pembayaran</h2>
 
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
                 <th>#</th>
+                <th>Penyewa</th>
                 <th>Kamar</th>
-                <th>Harga</th>
+                <th>Jumlah</th>
                 <th>Status</th>
                 <th>Bukti</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($pembayarans as $p)
+            @foreach(\App\Models\Pembayaran::orderBy('created_at','desc')->get() as $p)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $p->kamar->nomor_kamar }}</td>
+                    <td>{{ $p->penyewa->user->name ?? '-' }}</td>
+                    <td>{{ $p->kamar->nomor_kamar ?? '-' }}</td>
                     <td>Rp {{ number_format($p->jumlah,0,',','.') }}</td>
                     <td>
                         @if($p->status == 'pending')
@@ -42,11 +40,10 @@
                         @endif
                     </td>
                     <td>
-                        @if(!$p->bukti)
-                            <form action="{{ route('penyewa.pembayaran.upload', $p->id) }}" method="POST" enctype="multipart/form-data">
+                        @if($p->status == 'pending')
+                            <form action="{{ route('admin.pembayaran.konfirmasi', $p->id) }}" method="POST">
                                 @csrf
-                                <input type="file" name="bukti" required>
-                                <button type="submit" class="btn btn-sm btn-primary mt-1">Upload</button>
+                                <button type="submit" class="btn btn-sm btn-success">Konfirmasi</button>
                             </form>
                         @else
                             -

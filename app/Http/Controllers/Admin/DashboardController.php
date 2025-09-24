@@ -7,7 +7,7 @@ use App\Models\Kamar;
 use App\Models\Kos;
 use Illuminate\Http\Request;
 
-class KamarController extends Controller
+class DashboardController extends Controller
 {
     public function __construct()
     {
@@ -17,7 +17,7 @@ class KamarController extends Controller
     public function index()
     {
         $kamars = Kamar::with('kos')->get();
-        return view('admin.kamar.index', compact('kamars'));
+        return view('admin.kamars.index', compact('kamars'));
     }
 
     public function create()
@@ -39,7 +39,7 @@ class KamarController extends Controller
 
         Kamar::create($validated);
 
-        return redirect()->route('admin.kamar.index')
+        return redirect()->route('admin.kamars.index')
             ->with('success', 'Kamar berhasil ditambahkan');
     }
 
@@ -67,14 +67,14 @@ class KamarController extends Controller
 
         $kamar->update($validated);
 
-        return redirect()->route('admin.kamar.index')
+        return redirect()->route('admin.kamars.index')
             ->with('success', 'Kamar berhasil diperbarui');
     }
 
     public function destroy(Kamar $kamar)
     {
         $kamar->delete();
-        return redirect()->route('admin.kamar.index')
+        return redirect()->route('admin.kamars.index')
             ->with('success', 'Kamar berhasil dihapus');
     }
 }

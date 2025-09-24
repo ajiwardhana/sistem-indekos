@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -11,41 +11,46 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role'
+        'name',
+        'email',
+        'password',
+        'role', // penting buat middleware role
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
 
-    // Hanya 2 role: admin dan penghuni
+    public function penyewa()
+{
+    return $this->hasOne(\App\Models\Penyewa::class);
+}
+
+    /*
+    |--------------------------------------------------------------------------
+    | Role Helper
+    |--------------------------------------------------------------------------
+    */
+
     public function isAdmin()
     {
         return $this->role === 'admin';
     }
 
-    public function isPenghuni()
+    public function isPemilik()
     {
-        return $this->role === 'penghuni';
+        return $this->role === 'pemilik';
     }
 
-    // Relasi
-    public function penyewaan()
+    public function isPenyewa()
     {
-        return $this->hasMany(Penyewaan::class, 'user_id')->where('status', 'aktif');
-    }
-
-    public function kamar()
-    {
-        return $this->hasMany(Kamar::class, 'user_id');
-    }
-
-    public function pembayaran()
-    {
-        return $this->hasMany(Pembayaran::class, 'user_id');
+        return $this->role === 'penyewa';
     }
 }

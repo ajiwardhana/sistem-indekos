@@ -79,8 +79,8 @@
                         Tambah Kamar
                     @endisset
                 </button>
-                {{-- PERBAIKI: Ganti kamar.index menjadi admin.kamar.index --}}
-                <a href="{{ route('admin.kamar.index') }}" class="btn btn-secondary">Kembali</a>
+                {{-- PERBAIKI: Ganti kamar.index menjadi admin.kamars.index --}}
+                <a href="{{ route('admin.kamars.index') }}" class="btn btn-secondary">Kembali</a>
             </form>
         </div>
     </div>

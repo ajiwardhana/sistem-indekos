@@ -9,30 +9,33 @@ class Kamar extends Model
 {
     use HasFactory;
 
-// app/Models/Penyewa.php
-public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    // ✅ Kalau migration pakai plural (kamars), property ini bisa dihapus
+    protected $table = 'kamars';
 
-public function kamar()
-{
-    return $this->belongsTo(Kamar::class);
-}
+    // Field yang bisa diisi mass-assignment
+    protected $fillable = [
+        'nomor_kamar',
+        'tipe',
+        'harga',
+        'status',
+        'fasilitas',
+    ];
 
-// app/Models/User.php
-public function penyewa()
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    // Satu kamar bisa ditempati satu penyewa (optional)
+    public function penyewa()
 {
     return $this->hasOne(Penyewa::class);
 }
 
-public function isAdmin()
+public function pembayarans()
 {
-    return $this->role === 'admin';
+    return $this->hasMany(Pembayaran::class);
 }
 
-public function isPenyewa()
-{
-    return $this->role === 'penyewa';
-}
 }

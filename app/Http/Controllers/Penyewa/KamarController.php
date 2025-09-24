@@ -7,71 +7,67 @@ use App\Models\Kamar;
 use App\Models\Penyewa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Pembayaran;
 
 class KamarController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
+    // Menampilkan semua kamar
     public function index()
     {
-        // Hanya tampilkan kamar yang tersedia
-        $kamars = Kamar::where('status', 'tersedia')->with('kos')->get();
+        $kamars = Kamar::with('penyewa')->get();
         return view('penyewa.kamar.index', compact('kamars'));
     }
 
+    // Form sewa kamar
     public function sewa(Kamar $kamar)
     {
-        // Pastikan kamar masih tersedia
-        if ($kamar->status !== 'tersedia') {
-            return redirect()->back()->with('error', 'Kamar sudah tidak tersedia');
-        }
-
-        // Cek apakah user sudah menyewa kamar lain
-        $existingSewa = Penyewa::where('user_id', Auth::id())->first();
-        if ($existingSewa) {
-            return redirect()->back()->with('error', 'Anda sudah menyewa kamar');
-        }
-
         return view('penyewa.kamar.sewa', compact('kamar'));
     }
 
-    public function storeSewa(Request $request, Kamar $kamar)
+    // Simpan transaksi sewa
+public function storeSewa(Request $request, Kamar $kamar)
     {
-        // Validasi
-        $validated = $request->validate([
-            'tanggal_mulai' => 'required|date',
-            'durasi_sewa' => 'required|integer|min:1',
-            'catatan' => 'nullable|string',
+        // ✅ Validasi input
+        $request->validate([
+            'durasi' => 'required|integer|min:1', // durasi minimal 1 bulan
         ]);
 
-        // Pastikan kamar masih tersedia
-        if ($kamar->status !== 'tersedia') {
-            return redirect()->back()->with('error', 'Kamar sudah tidak tersedia');
+        $user = Auth::user();
+
+        // ✅ Pastikan user belum sewa kamar lain
+        if (Penyewa::where('user_id', $user->id)->whereNotNull('kamar_id')->exists()) {
+            return back()->with('error', 'Anda sudah menyewa kamar lain.');
         }
 
-        // Cek apakah user sudah menyewa kamar lain
-        $existingSewa = Penyewa::where('user_id', Auth::id())->first();
-        if ($existingSewa) {
-            return redirect()->back()->with('error', 'Anda sudah menyewa kamar');
-        }
+        $durasi = (int) $request->durasi; // konversi string -> int
+        $tanggalMasuk = Carbon::now();
+        $tanggalKeluar = $tanggalMasuk->copy()->addMonths($durasi);
 
-        // Buat penyewa
-        Penyewa::create([
-            'user_id' => Auth::id(),
-            'kamar_id' => $kamar->id,
-            'tanggal_mulai' => $validated['tanggal_mulai'],
-            'durasi_sewa' => $validated['durasi_sewa'],
-            'catatan' => $validated['catatan'],
-            'status' => 'aktif',
+        // ✅ Simpan data penyewa
+        $penyewa = Penyewa::create([
+            'user_id'       => $user->id,
+            'kamar_id'      => $kamar->id,
+            'tanggal_masuk' => $tanggalMasuk,
+            'tanggal_keluar'=> $tanggalKeluar,
         ]);
 
-        // Update status kamar
-        $kamar->update(['status' => 'terisi']);
+        // ✅ Simpan data pembayaran (status pending dulu)
+        Pembayaran::create([
+            'penyewa_id' => $penyewa->id,
+            'kamar_id'   => $kamar->id,
+            'jumlah'     => $kamar->harga * $durasi,
+            'status'     => 'pending',
+            'bulan'      => $durasi, // ⬅️ jangan lupa ini!
+            'tanggal_bayar' => null, // default null
+        ]);
 
-        return redirect()->route('penyewa.dashboard')
-            ->with('success', 'Kamar berhasil disewa');
+        // ✅ Update status kamar
+        $kamar->update([
+            'status' => 'pending', // pending sampai admin konfirmasi
+        ]);
+
+        return redirect()->route('penyewa.dashboard')->with('success', 'Kamar berhasil dipesan, menunggu konfirmasi admin.');
     }
+
 }

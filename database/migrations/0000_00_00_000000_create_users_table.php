@@ -14,12 +14,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'penghuni'])->default('penghuni');
-            $table->string('phone')->nullable();
-            $table->text('address')->nullable();
+            $table->enum('role', ['admin', 'pemilik', 'penyewa'])->default('penyewa');
+            $table->string('no_telepon')->nullable();
+            $table->text('alamat')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->engine = 'InnoDB'; // Ensure InnoDB engine is used
         });
     }
 

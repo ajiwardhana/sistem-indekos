@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.kamar.index') }}" class="nav-link {{ request()->is('admin/kamar*') ? 'active' : '' }}">
+                <a href="{{ route('admin.kamars.index') }}" class="nav-link {{ request()->is('admin/kamar*') ? 'active' : '' }}">
                     <i class="bi bi-door-closed"></i>
                     Manajemen Kamar
                 </a>

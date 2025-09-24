@@ -2,7 +2,7 @@
     <h4 class="text-center mb-4">Sikosan</h4>
     <ul class="nav flex-column">
 
-        {{-- Menu untuk Admin --}}
+        {{-- Admin --}}
         @if(Auth::check() && Auth::user()->role === 'admin')
             <li class="nav-item">
                 <a class="nav-link text-white" href="{{ route('admin.dashboard') }}">
@@ -10,7 +10,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('admin.kamar.index') }}">
+                <a class="nav-link text-white" href="{{ route('admin.kamars.index') }}">
                     <i class="bi bi-door-closed"></i> Kelola Kamar
                 </a>
             </li>
@@ -19,6 +19,19 @@
                     <i class="bi bi-people"></i> Kelola Pengguna
                 </a>
             </li>
+            <li class="nav-item">
+                @php
+                    $pending = \App\Models\Pembayaran::where('status','pending')->count();
+                @endphp
+                <a class="nav-link text-white" href="{{ route('admin.pembayaran.index') }}">
+                    <i class="bi bi-wallet2"></i> Pembayaran
+                    @if($pending > 0)
+                        <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
+                    @endif
+                </a>
+            </li>
+
+
             <li class="nav-item">
                 <a class="nav-link text-white" href="{{ route('admin.keluhan.index') }}">
                     <i class="bi bi-chat-left-dots"></i> Keluhan
@@ -31,7 +44,34 @@
             </li>
         @endif
 
-        {{-- Menu untuk Pemilik --}}
+        {{-- Penyewa --}}
+@if(Auth::check() && Auth::user()->role === 'penyewa')
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{{ route('penyewa.dashboard') }}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" href="{{ route('penyewa.kamar.index') }}">
+            <i class="bi bi-door-open"></i> Daftar Kamar
+        </a>
+    </li>
+    <li class="nav-item">
+        @php
+            $penyewa = \App\Models\Penyewa::where('user_id', Auth::id())->first();
+            $pending = $penyewa ? $penyewa->pembayarans()->where('status','pending')->count() : 0;
+        @endphp
+        <a class="nav-link text-white" href="{{ route('penyewa.pembayaran.index') }}">
+            <i class="bi bi-wallet2"></i> Pembayaran
+            @if($pending > 0)
+                <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
+            @endif
+        </a>
+    </li>
+@endif
+
+
+        {{-- Pemilik --}}
         @if(Auth::check() && Auth::user()->role === 'pemilik')
             <li class="nav-item">
                 <a class="nav-link text-white" href="{{ route('pemilik.dashboard') }}">
@@ -50,28 +90,9 @@
             </li>
         @endif
 
-        {{-- Menu untuk Penyewa --}}
-        @if(Auth::check() && Auth::user()->role === 'penyewa')
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('penyewa.dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="{{ route('penyewa.kamar.index') }}">
-                    <i class="bi bi-door-open"></i> Daftar Kamar
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="#">
-                    <i class="bi bi-wallet2"></i> Pembayaran
-                </a>
-            </li>
-        @endif
-
     </ul>
 
-    {{-- Tombol Logout --}}
+    {{-- Logout --}}
     @if(Auth::check())
         <hr class="text-white">
         <form method="POST" action="{{ route('logout') }}">

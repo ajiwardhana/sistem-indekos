@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('kamar', function (Blueprint $table) {
+        Schema::create('kamars', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_kamar', 10)->unique();
-            $table->enum('tipe', ['standar', 'vip', 'vvip']);
-            $table->integer('harga');
-            $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])->default('tersedia');
+            $table->string('nomor_kamar')->unique();
+            $table->decimal('harga', 10, 2);
+            $table->string('status')->default('tersedia');
             $table->text('fasilitas')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('kamar');
+        Schema::dropIfExists('kamars');
     }
 };

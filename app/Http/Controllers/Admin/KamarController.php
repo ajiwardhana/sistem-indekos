@@ -4,72 +4,40 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kamar;
-use App\Models\Kos;
 use Illuminate\Http\Request;
 
 class KamarController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
-        $kamars = Kamar::with('kos')->get();
-        return view('admin.kamar.index', compact('kamars'));
+        $kamars = Kamar::all();
+        return view('admin.kamars.index', compact('kamars'));
     }
 
     public function create()
     {
-        $kosList = Kos::all();
-        return view('admin.kamar.create', compact('kosList'));
+        return view('admin.kamar.create');
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'kos_id' => 'required|exists:kos,id',
-            'nomor_kamar' => 'required|string|max:10',
-            'ukuran' => 'required|string|max:20',
-            'harga_per_bulan' => 'required|numeric',
-            'deskripsi' => 'nullable|string',
-            'status' => 'required|in:tersedia,terisi',
+        $request->validate([
+            'nomor_kamar' => 'required|unique:kamars,nomor_kamar',
+            'tipe' => 'required|in:standar,vip,vvip',
+            'harga' => 'required|numeric',
+            'status' => 'required|in:tersedia,terisi,perbaikan',
         ]);
 
-        Kamar::create($validated);
+        Kamar::create($request->all());
 
-        return redirect()->route('admin.kamar.index')
-            ->with('success', 'Kamar berhasil ditambahkan');
+        return redirect()->route('admin.kamars.index')->with('success', 'Kamar berhasil ditambahkan.');
     }
 
-    public function edit(Kamar $kamar)
-    {
-        $kosList = Kos::all();
-        return view('admin.kamar.edit', compact('kamar', 'kosList'));
-    }
+    public function show($id)
+{
+    $kamar = Kamar::with(['penyewa.user'])->findOrFail($id);
+    return view('admin.kamars.show', compact('kamar'));
+}
 
-    public function update(Request $request, Kamar $kamar)
-    {
-        $validated = $request->validate([
-            'kos_id' => 'required|exists:kos,id',
-            'nomor_kamar' => 'required|string|max:10',
-            'ukuran' => 'required|string|max:20',
-            'harga_per_bulan' => 'required|numeric',
-            'deskripsi' => 'nullable|string',
-            'status' => 'required|in:tersedia,terisi',
-        ]);
-
-        $kamar->update($validated);
-
-        return redirect()->route('admin.kamar.index')
-            ->with('success', 'Kamar berhasil diperbarui');
-    }
-
-    public function destroy(Kamar $kamar)
-    {
-        $kamar->delete();
-        return redirect()->route('admin.kamar.index')
-            ->with('success', 'Kamar berhasil dihapus');
-    }
+    // Tambah edit(), update(), destroy() nanti bisa lanjut
 }
