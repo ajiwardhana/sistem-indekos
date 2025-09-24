@@ -60,13 +60,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     })->name('dashboard');
     Route::resource('kamars', AdminKamarController::class);
     Route::resource('users', UserController::class);
-    Route::resource('penyewa', PenyewaController::class);
 
      // 🔥 Pembayaran
-    Route::get('/admin/pembayarans', [AdminPembayaranController::class, 'index'])->name('admin.pembayarans.index');
-    Route::post('/admin/pembayarans/{id}/konfirmasi', [AdminPembayaranController::class, 'konfirmasi'])->name('admin.pembayarans.konfirmasi');
-    Route::post('/admin/pembayarans/{id}/tolak', [AdminPembayaranController::class, 'tolak'])->name('admin.pembayarans.tolak');
-
+    Route::get('pembayarans', [AdminPembayaranController::class, 'index'])->name('pembayarans.index');
+    Route::post('pembayarans/{id}/konfirmasi', [AdminPembayaranController::class, 'konfirmasi'])->name('pembayarans.konfirmasi');
+    Route::post('pembayarans/{id}/tolak', [AdminPembayaranController::class, 'tolak'])->name('pembayarans.tolak');
+    
+    // Profil & Pengaturan
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::get('/penghuni', [AdminController::class, 'manajemenPenghuni'])->name('penghuni');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
