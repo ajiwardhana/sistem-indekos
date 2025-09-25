@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Dashboard Pemilik')
+@section('title', 'Dashboard Pemilik')
 
 @section('content')
 <div class="container-fluid">
@@ -25,7 +25,7 @@
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPenyewa }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                            <i class="bi bi-people-fill fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -46,29 +46,29 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tambah Admin -->
+        <!-- Kelola Admin -->
         <div class="col-xl-4 col-md-12 mb-4">
-            <a href="{{ route('pemilik.users.admin.create') }}" class="text-decoration-none">
+            <a href="{{ route('pemilik.admin.index') }}" class="text-decoration-none">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Tambah Admin
+                                    Kelola Admin
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    Klik untuk menambahkan admin baru
+                                <div class="h6 mb-0 font-weight-bold text-gray-800">
+                                    Klik untuk menambah atau mengelola admin
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <i class="bi bi-person-plus fa-2x text-gray-300"></i>
+                                <i class="bi bi-person-plus-fill fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>

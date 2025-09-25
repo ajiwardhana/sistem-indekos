@@ -102,44 +102,23 @@
                         </tr>
 
                         <!-- Modal Detail Kamar -->
-                        <div class="modal fade" id="detailModal{{ $kamar->id }}" tabindex="-1" aria-hidden="true">
-                          <div class="modal-dialog modal-lg modal-dialog-centered">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">Detail Kamar {{ $kamar->nomor_kamar }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                              </div>
-                              <div class="modal-body">
-                                @if($kamar->fotos->count() > 0)
-                                <div id="carousel{{ $kamar->id }}" class="carousel slide mb-3" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        @foreach($kamar->fotos as $i => $foto)
-                                            <div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
-                                                <img src="{{ asset('storage/' . $foto->foto) }}" 
-                                                     class="d-block w-100" style="height:300px; object-fit:cover;">
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ $kamar->id }}" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ $kamar->id }}" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon"></span>
-                                    </button>
-                                </div>
-                                @endif
-                                <p><strong>Harga:</strong> Rp {{ number_format($kamar->harga, 0, ',', '.') }}</p>
-                                <p><strong>Status:</strong> {{ ucfirst($kamar->status) }}</p>
-                                <p><strong>Fasilitas:</strong> {{ $kamar->fasilitas }}</p>
-                                <p><strong>Deskripsi:</strong></p>
-                                <p>{{ $kamar->deskripsi }}</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+<div class="modal fade" id="detailModal{{ $kamar->id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detail Kamar {{ $kamar->nomor_kamar }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        @include('admin.kamars.show-content', ['kamar' => $kamar])
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                         @endforeach
                     </tbody>

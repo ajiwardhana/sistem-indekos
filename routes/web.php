@@ -11,6 +11,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 use App\Http\Controllers\Pemilik\PemilikController;
+use App\Http\Controllers\Pemilik\DashboardController;
+use App\Http\Controllers\Pemilik\AdminController as PemilikAdminController;
+
 
 
 /*
@@ -113,16 +116,16 @@ Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])
 | Routes Pemilik
 |--------------------------------------------------------------------------
 */
-Route::prefix('pemilik')->middleware(['auth','role:pemilik'])->group(function () {
-    Route::get('dashboard', [PemilikController::class,'index'])->name('pemilik.dashboard');
+Route::prefix('pemilik')
+    ->middleware(['auth','role:pemilik'])
+    ->name('pemilik.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Admin management
-    Route::get('users/admin/create', [PemilikController::class,'createAdmin'])->name('pemilik.users.admin.create');
-    Route::post('users/admin/store', [PemilikController::class,'storeAdmin'])->name('pemilik.users.admin.store');
-});
-
-
-
+        // Resource route admin lengkap
+        Route::resource('admin', \App\Http\Controllers\Pemilik\AdminController::class)
+            ->only(['index','create','store','edit','update','destroy']);
+    });
 
 
 /*

@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
-    {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+    public function index(Request $request)
+{
+    $users = User::query();
+
+    // Filter berdasarkan role (jika ada)
+    if ($role = $request->get('role')) {
+        $users->where('role', $role);
     }
+
+    // Ambil semua atau paginate
+    $users = $users->paginate(10);
+
+    return view('admin.users.index', compact('users'));
+}
+
 }
