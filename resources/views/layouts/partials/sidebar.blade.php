@@ -1,123 +1,17 @@
-<div class="col-lg-2 col-md-3 bg-dark text-white sidebar p-3 min-vh-100">
-    <h4 class="text-center mb-4">Sikosan</h4>
-    <ul class="nav flex-column">
+<!-- Sidebar untuk desktop -->
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        @include('layouts.partials.sidebar-content')
+    </div>
+</nav>
 
-        {{-- Admin --}}
-        @if(Auth::check() && Auth::user()->role === 'admin')
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('admin.dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('admin.kamars.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('admin.kamars.index') }}">
-                    <i class="bi bi-door-closed"></i> Kelola Kamar
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('admin.users.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('admin.users.index') }}">
-                    <i class="bi bi-people"></i> Kelola Pengguna
-                </a>
-            </li>
-            <li class="nav-item">
-                @php
-                    $pending = \App\Models\Pembayaran::where('status','pending')->count();
-                @endphp
-                <a class="nav-link text-white {{ request()->routeIs('admin.pembayarans.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('admin.pembayarans.index') }}">
-                    <i class="bi bi-wallet2"></i> Pembayaran
-                    @if($pending > 0)
-                        <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
-                    @endif
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('admin.keluhan.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('admin.keluhan.index') }}">
-                    <i class="bi bi-chat-left-dots"></i> Keluhan
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('profile.edit') }}">
-                    <i class="bi bi-person-gear"></i> Pengaturan Profil
-                </a>
-            </li>
-        @endif
-
-        {{-- Penyewa --}}
-        @if(Auth::check() && Auth::user()->role === 'penyewa')
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('penyewa.dashboard') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('penyewa.dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('penyewa.kamar.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('penyewa.kamar.index') }}">
-                    <i class="bi bi-door-open"></i> Daftar Kamar
-                </a>
-            </li>
-            <li class="nav-item">
-                @php
-                    $penyewa = \App\Models\Penyewa::where('user_id', Auth::id())->first();
-                    $pending = $penyewa ? $penyewa->pembayarans()->where('status','pending')->count() : 0;
-                @endphp
-                <a class="nav-link text-white {{ request()->routeIs('penyewa.pembayarans.*') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('penyewa.pembayarans.index') }}">
-                    <i class="bi bi-wallet2"></i> Pembayaran
-                    @if($pending > 0)
-                        <span class="badge bg-warning text-dark ms-1">{{ $pending }}</span>
-                    @endif
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('profile.edit') }}">
-                    <i class="bi bi-person-gear"></i> Pengaturan Profil
-                </a>
-            </li>
-        @endif
-
-        {{-- Pemilik --}}
-        @if(Auth::check() && Auth::user()->role === 'pemilik')
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('pemilik.dashboard') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('pemilik.dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="#">
-                    <i class="bi bi-house-door"></i> Data Kos
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="#">
-                    <i class="bi bi-cash"></i> Laporan Keuangan
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white {{ request()->routeIs('profile.edit') ? 'active bg-secondary' : '' }}" 
-                   href="{{ route('profile.edit') }}">
-                    <i class="bi bi-person-gear"></i> Pengaturan Profil
-                </a>
-            </li>
-        @endif
-    </ul>
-
-    {{-- Logout --}}
-    @if(Auth::check())
-        <hr class="text-white">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-danger w-100">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </button>
-        </form>
-    @endif
+<!-- Offcanvas untuk mobile -->
+<div class="offcanvas offcanvas-start bg-light" tabindex="-1" id="offcanvasSidebar">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-3">
+        @include('layouts.partials.sidebar-content')
+    </div>
 </div>

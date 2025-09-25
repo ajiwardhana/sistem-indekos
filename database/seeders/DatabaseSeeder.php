@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@sikosan.com'],
             [
                 'name' => 'Admin Sikosan',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('123123'),
                 'role' => 'admin',
                 'no_telepon' => '081234567890',
                 'alamat' => 'Alamat Admin'
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'penyewa@sikosan.com'],
             [
                 'name' => 'Penyewa Kos',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('123123'),
                 'role' => 'penyewa',
                 'no_telepon' => '08111222333',
                 'alamat' => 'Alamat Penyewa'

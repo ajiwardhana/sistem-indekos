@@ -2,27 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Penyewa extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'kamar_id',
         'tanggal_masuk',
         'tanggal_keluar',
+        'status',
+        'catatan',
+        'no_telepon',   // ✅ tambahin
+        'alamat'        // ✅ tambahin
     ];
 
-    protected $dates = ['tanggal_masuk', 'tanggal_keluar'];
-
-        protected $casts = [
+    protected $casts = [
         'tanggal_masuk' => 'datetime',
         'tanggal_keluar' => 'datetime',
     ];
-
 
     public function user()
     {
@@ -35,7 +33,7 @@ class Penyewa extends Model
     }
 
     public function pembayarans()
-{
-    return $this->hasMany(Pembayaran::class);
-}
+    {
+        return $this->hasMany(Pembayaran::class);
+    }
 }

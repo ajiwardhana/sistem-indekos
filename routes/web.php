@@ -10,6 +10,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
+use App\Http\Controllers\Pemilik\PemilikController;
 
 
 /*
@@ -55,28 +56,31 @@ Route::get('/home', function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
 
-    Route::put('kamars/{id}/batalkan', [AdminKamarController::class, 'batalkan'])
-    ->name('kamars.batalkan');
+    Route::put('kamars/{id}/batalkan', [AdminKamarController::class, 'batalkan'])->name('kamars.batalkan');
 
     Route::resource('kamars', AdminKamarController::class);
     Route::resource('users', UserController::class);
     Route::resource('admins', AdminController::class);
 
-     // 🔥 Pembayaran
     Route::get('pembayarans', [AdminPembayaranController::class, 'index'])->name('pembayarans.index');
     Route::post('pembayarans/{id}/konfirmasi', [AdminPembayaranController::class, 'konfirmasi'])->name('pembayarans.konfirmasi');
     Route::post('pembayarans/{id}/tolak', [AdminPembayaranController::class, 'tolak'])->name('pembayarans.tolak');
-    
-    // Profil & Pengaturan
+
+
     Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('profile');
     Route::get('/penghuni', [AdminController::class, 'manajemenPenghuni'])->name('penghuni');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::get('/keluhan', fn() => view('admin.keluhan.index'))->name('keluhan.index');
+
+    // ✅ Route hapus foto kamar
+    
+    Route::delete('kamars/{kamar}/fotos/{foto}', [AdminKamarController::class, 'destroyFoto'])
+    ->name('kamars.foto.destroy');
+
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +93,7 @@ Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])
 
     // Kamar
     Route::get('/kamars', [App\Http\Controllers\Penyewa\KamarController::class, 'index'])
-        ->name('kamar.index');
+        ->name('kamars.index');
     Route::get('/kamars/{kamar}/sewa', [App\Http\Controllers\Penyewa\KamarController::class, 'sewa'])
         ->name('kamars.sewa');
     Route::post('/kamars/{kamar}/sewa', [App\Http\Controllers\Penyewa\KamarController::class, 'storeSewa'])
@@ -109,9 +113,17 @@ Route::prefix('penyewa')->name('penyewa.')->middleware(['auth', 'role:penyewa'])
 | Routes Pemilik
 |--------------------------------------------------------------------------
 */
-Route::prefix('pemilik')->name('pemilik.')->middleware(['auth', 'role:pemilik'])->group(function () {
-    Route::get('/dashboard', fn() => view('pemilik.dashboard'))->name('dashboard');
+Route::prefix('pemilik')->middleware(['auth','role:pemilik'])->group(function () {
+    Route::get('dashboard', [PemilikController::class,'index'])->name('pemilik.dashboard');
+
+    // Admin management
+    Route::get('users/admin/create', [PemilikController::class,'createAdmin'])->name('pemilik.users.admin.create');
+    Route::post('users/admin/store', [PemilikController::class,'storeAdmin'])->name('pemilik.users.admin.store');
 });
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------

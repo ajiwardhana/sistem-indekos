@@ -11,7 +11,11 @@ class Pembayaran extends Model
         'kamar_id',
         'jumlah',
         'status',
-        'tanggal_bayar'
+        'tanggal_bayar',
+        'bulan',
+        'tahun',
+        'bukti_pembayaran',
+        'keterangan'
     ];
 
     public function penyewa()

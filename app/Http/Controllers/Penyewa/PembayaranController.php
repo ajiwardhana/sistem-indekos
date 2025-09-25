@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Penyewa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
-use App\Models\Penyewa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pembayarans = Pembayaran::where('penyewa_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = Pembayaran::whereHas('penyewa', function($q){
+            $q->where('user_id', auth()->id());
+        });
+
+        // ✅ Filter berdasarkan status jika ada
+        if ($request->has('status') && in_array($request->status, ['pending','lunas','ditolak'])) {
+            $query->where('status', $request->status);
+        }
+
+        $pembayarans = $query->orderBy('created_at','desc')->paginate(10);
 
         return view('penyewa.pembayarans.index', compact('pembayarans'));
     }
@@ -26,19 +31,18 @@ class PembayaranController extends Controller
         ]);
 
         $pembayaran = Pembayaran::where('id', $id)
-            ->where('penyewa_id', auth()->id())
+            ->whereHas('penyewa', fn($q) => $q->where('user_id', auth()->id()))
             ->firstOrFail();
 
-        // Simpan file
         $path = $request->file('bukti')->store('bukti_pembayaran', 'public');
 
-        // Update pembayaran
         $pembayaran->update([
-            'bukti' => $path,
-            'status' => 'pending', // default setelah upload
+            'bukti_pembayaran' => $path,
+            'status' => 'pending',
         ]);
 
-        return redirect()->route('penyewa.pembayarans.index')
+        return redirect()
+            ->route('penyewa.pembayarans.index')
             ->with('success', 'Bukti pembayaran berhasil diupload!');
     }
 }

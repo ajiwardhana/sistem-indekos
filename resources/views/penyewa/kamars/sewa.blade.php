@@ -12,7 +12,7 @@
             <input type="number" name="durasi" id="durasi" class="form-control" required min="1">
         </div>
         <button type="submit" class="btn btn-success">Konfirmasi Sewa</button>
-        <a href="{{ route('penyewa.kamar.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('penyewa.kamars.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

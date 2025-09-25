@@ -10,35 +10,32 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Tampilkan halaman register.
-     */
     public function create()
     {
-        return view('auth.register');
+        return view('auth.register'); // blade form registrasi
     }
 
-    /**
-     * Simpan user baru.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+            'no_telepon' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string',
         ]);
 
-        // default role = penyewa
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => 'penyewa', // bisa kamu ganti default role-nya
+            'role' => 'penyewa', // default role
+            'no_telepon' => $request->no_telepon,
+            'alamat' => $request->alamat,
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('home');
+        return redirect()->route('penyewa.dashboard');
     }
 }

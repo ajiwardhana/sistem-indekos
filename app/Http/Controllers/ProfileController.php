@@ -19,13 +19,17 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:6|confirmed', // tambah validasi password
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:users,email,' . $user->id,
+            'no_telepon' => 'nullable|string|max:20',
+            'alamat'     => 'nullable|string|max:255',
+            'password'   => 'nullable|min:6|confirmed',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->no_telepon = $request->no_telepon;
+        $user->alamat     = $request->alamat;
 
         // hanya update password jika diisi
         if ($request->filled('password')) {

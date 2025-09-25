@@ -29,6 +29,7 @@ protected $routeMiddleware = [
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'session.unique' => \App\Http\Middleware\GenerateUniqueSession::class,
     'role' => \App\Http\Middleware\RoleMiddleware::class,
+    'pemilik' => \App\Http\Middleware\pemilikMiddleware::class,
 ];
 
 }
