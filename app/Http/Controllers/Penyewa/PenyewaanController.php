@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Penyewa;
 
 use App\Models\Penyewaan;
 use App\Models\Kamar;
